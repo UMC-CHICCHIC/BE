@@ -1,7 +1,7 @@
-name: "✨ Feature"
-description: "새로운 기능 추가"
-labels: ["feature"]
-body:
+name: "Feature Template"
+description: "기능 추가할 때 쓰는 템플릿"
+placeholder: ex) [FEAT] 회원가입 구현
+labels: ["feature"]body:
   - type: textarea
     attributes:
       label: 📄 설명
