@@ -1,0 +1,52 @@
+name: "Refactor Template"
+description: "리팩토링 작업을 위한 이슈 템플릿"
+title: "[REFACTOR]: "
+labels: ["refactor"]
+
+body:
+  - type: textarea
+    id: refactor-reason
+    attributes:
+      label: "🔍 리팩토링 사유"
+      description: "기존 코드에서 리팩토링이 필요한 이유를 적어주세요."
+      placeholder: "ex. 중복 코드 제거, 가독성 개선, 성능 최적화 등"
+    validations:
+      required: true
+
+  - type: textarea
+    id: refactor-target
+    attributes:
+      label: "🛠️ 리팩토링 대상"
+      description: "리팩토링할 파일이나 함수, 컴포넌트 등을 명시해주세요."
+      placeholder: |
+        - UserService.java
+        - authReducer.ts
+    validations:
+      required: true
+
+  - type: textarea
+    id: refactor-details
+    attributes:
+      label: "📄 리팩토링 상세 내용"
+      description: "어떤 방식으로 개선할 예정인지 구체적으로 설명해주세요."
+      placeholder: "ex. switch 문을 객체로 치환, useEffect 분리 등"
+    validations:
+      required: true
+
+  - type: textarea
+    id: side-effects
+    attributes:
+      label: "⚠️ 영향 범위 및 부작용"
+      description: "리팩토링으로 인한 영향이나 우려되는 부작용이 있다면 적어주세요."
+      placeholder: "ex. 로그인 로직 영향 가능성 있음"
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: "📚 참고 자료"
+      description: "참고한 문서나 링크가 있다면 적어주세요."
+      placeholder: "ex. https://refactoring.guru/"
+    validations:
+      required: false
