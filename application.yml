@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://chicchic-database.czgk8qe8sbqf.ap-northeast-2.rds.amazonaws.com:3306/chicchic?serverTimezone=Asia/Seoul
-    username: root
-    password: chicchic123!
+    url: ${DB_HOST}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
 
   sql:
     init:
