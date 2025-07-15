@@ -3,7 +3,7 @@ package chic_chic.spring.auth;
 import chic_chic.spring.domain.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
