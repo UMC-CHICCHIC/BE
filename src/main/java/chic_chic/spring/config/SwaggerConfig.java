@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.Components;
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -34,13 +33,4 @@ public class SwaggerConfig {
                 );
     }
 
-    // Swagger가 컨트롤러 패키지만 스캔하도록 제한
-    @Bean
-    public GroupedOpenApi chicChicApi() {
-        return GroupedOpenApi.builder()
-                .group("chicchic")
-                .packagesToScan("chic_chic.spring.web.controller")
-                .pathsToMatch("/**")
-                .build();
-    }
 }
