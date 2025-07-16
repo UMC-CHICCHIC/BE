@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
-@RestControllerAdvice(annotations = {RestController.class})
+@RestControllerAdvice(basePackages = "chic_chic.spring.web.controller")
 public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
 
