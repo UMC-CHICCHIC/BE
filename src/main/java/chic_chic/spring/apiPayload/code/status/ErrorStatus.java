@@ -22,8 +22,10 @@ public enum ErrorStatus implements BaseErrorCode {
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
 
     // 예시,,,
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
+    // 향수 이야기 관련 에러
+    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
