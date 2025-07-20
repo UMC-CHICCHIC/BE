@@ -27,6 +27,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
+        System.out.println("요청 URI: " + uri);
+        System.out.println("Authorization 헤더: " + request.getHeader("Authorization"));
+
 
         // Swagger 요청은 필터 적용 X
         if (uri.contains("swagger") || uri.contains("api-docs")) {
