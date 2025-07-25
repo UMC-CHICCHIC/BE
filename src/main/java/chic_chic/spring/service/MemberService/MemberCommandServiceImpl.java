@@ -1,11 +1,16 @@
 package chic_chic.spring.service.MemberService;
 
+import chic_chic.spring.apiPayload.code.status.ErrorStatus;
+import chic_chic.spring.apiPayload.exception.handler.MemberHandler;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
+import chic_chic.spring.converter.MemberConverter;
 import chic_chic.spring.domain.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +21,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;  // 이 부분 추가
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
     @Transactional
@@ -71,4 +76,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .refreshToken(refreshToken)  // DTO에 리프레시 토큰 필드 추가 필요
                 .build();
     }
+
+    @Transactional(readOnly = true)
+    @Override
+    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request){
+        Authentication authentication = jwtTokenProvider.extractAuthentication(request);
+        String username = authentication.getName();
+
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        return MemberConverter.toMemberInfo(member);
+    }
+
 }

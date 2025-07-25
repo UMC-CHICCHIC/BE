@@ -36,7 +36,10 @@ public class MemberResponseDTO {
     public static class MemberInfoDTO {
         private String username;
         private String email;
+        private String password;
         private String phoneNumber;
         private String nickname;
+
+
     }
 }
