@@ -1,5 +1,6 @@
 package chic_chic.spring.web.controller;
 
+import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
 import chic_chic.spring.service.MemberService.MemberCommandService;
@@ -23,9 +24,10 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<MemberResponseDTO.LoginResultDTO> login(@RequestBody MemberRequestDTO.LoginDto loginDto) {
+    public ResponseEntity<ApiResponse<MemberResponseDTO.LoginResultDTO>> login(@RequestBody MemberRequestDTO.LoginDto loginDto) {
         MemberResponseDTO.LoginResultDTO loginResult = memberService.login(loginDto);
-        return ResponseEntity.ok(loginResult);
+        return ResponseEntity.ok(ApiResponse.onSuccess(loginResult));
     }
+
 
 }
