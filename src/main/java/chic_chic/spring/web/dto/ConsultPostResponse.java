@@ -24,6 +24,15 @@ public class ConsultPostResponse {
         private String imageUrl;
     }
 
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class HomeLatestDto {
+        private LatestDto receivePost;
+        private LatestDto givePost;
+    }
+
     //게시글 보기
     @Builder
     @Getter
