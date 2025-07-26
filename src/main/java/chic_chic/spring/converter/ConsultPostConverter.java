@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConsultPostConverter {
 
@@ -21,8 +22,9 @@ public class ConsultPostConverter {
                 .build();
     }
 
-    public static ConsultPostResponse.PreviewDto toPreviewDto(ConsultPost consultPost){
-        return ConsultPostResponse.PreviewDto.builder()
+
+    public static ConsultPostResponse.LatestDto toLatestDto(ConsultPost consultPost){
+        return ConsultPostResponse.LatestDto.builder()
                 .consultId(consultPost.getConsultPost_Id())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
@@ -30,6 +32,14 @@ public class ConsultPostConverter {
                 .imageUrl(consultPost.getImageUrl())
                 .build();
     }
+
+    public static ConsultPostResponse.HomeLatestDto toHomeLatestDto(ConsultPost receivePost, ConsultPost givePost){
+        return ConsultPostResponse.HomeLatestDto.builder()
+                .receivePost(receivePost != null ? toLatestDto(receivePost) : null)
+                .givePost(givePost != null ? toLatestDto(givePost) : null)
+                .build();
+    }
+
 
     public static ConsultPostResponse.EntirePostDto toEntirePostDto(ConsultPost consultPost){
         return ConsultPostResponse.EntirePostDto.builder()
@@ -44,11 +54,9 @@ public class ConsultPostConverter {
                 .build();
     }
 
-    public static ConsultPostResponse.ConsultPostSummaryDto toConsultPostSummaryDto(ConsultPost consultPost){
-        return ConsultPostResponse.ConsultPostSummaryDto.builder()
-                .memberId(consultPost.getMember().getId())
-                .nickname(consultPost.getMember().getNickname())
-                .consultPostId(consultPost.getConsultPost_Id())
+    public static ConsultPostResponse.PreviewDto toPreviewDto(ConsultPost consultPost){
+        return ConsultPostResponse.PreviewDto.builder()
+                .consultId(consultPost.getConsultPost_Id())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .imageUrl(consultPost.getImageUrl())
@@ -56,17 +64,33 @@ public class ConsultPostConverter {
                 .build();
     }
 
-    public static Page<ConsultPostResponse.ConsultPostFilteredDto> toFilteredDtoList(Page<ConsultPost> consultPosts){
+    public static ConsultPostResponse.HomeResponseDto toHomeResponseDto(List<ConsultPost> receiveList, List<ConsultPost> giveList){
+        List<ConsultPostResponse.PreviewDto> receiveDto = receiveList.stream()
+                .map(ConsultPostConverter::toPreviewDto)
+                .toList();
+        List<ConsultPostResponse.PreviewDto> giveDto = giveList.stream()
+                .map(ConsultPostConverter::toPreviewDto)
+                .toList();
 
-        return consultPosts.map(consultPost ->
-                ConsultPostResponse.ConsultPostFilteredDto.builder()
-                        .memberId(consultPost.getMember().getId())
-                        .nickname(consultPost.getMember().getNickname())
-                        .consultPostId(consultPost.getConsultPost_Id())
-                        .title(consultPost.getTitle())
-                        .imageUrl(consultPost.getImageUrl())
-                        .dateTime(consultPost.getCreatedAt())
-                        .build()
-        );
+        return ConsultPostResponse.HomeResponseDto.builder()
+                .receivePosts(receiveDto)
+                .givePosts(giveDto)
+                .build();
     }
+
+    public static ConsultPostResponse.PagedResponseDto toPagedResponseDto(Page<ConsultPost> page){
+        List<ConsultPostResponse.PreviewDto> contents = page.getContent().stream()
+                .map(ConsultPostConverter::toPreviewDto)
+                .toList();
+
+        return ConsultPostResponse.PagedResponseDto.builder()
+                .content(contents)
+                .pageNumber(page.getNumber())
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .last(page.isLast())
+                .build();
+    }
+
 }
