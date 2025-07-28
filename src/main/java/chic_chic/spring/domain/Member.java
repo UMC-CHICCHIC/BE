@@ -1,6 +1,7 @@
 package chic_chic.spring.domain;
 
 import chic_chic.spring.domain.common.BaseEntity;
+import chic_chic.spring.domain.enums.SocialType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,23 +16,28 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 아이디 (username)
+    // 일반 회원가입 아이디
     @Column(nullable = false, unique = true, length = 30)
     private String username;
 
-    // 비밀번호
-    @Column(nullable = false)
+    // 소셜 로그인은 password가 null 가능
+    @Column(nullable = true)
     private String password;
 
-    // 이메일
     @Column(nullable = false, unique = true)
     private String email;
 
-    // 휴대전화번호
     @Column(nullable = false, length = 20)
     private String phoneNumber;
 
-    // 닉네임
     @Column(nullable = false, unique = true, length = 20)
     private String nickname;
+
+    // 소셜 로그인 관련 (일반 회원이면 null)
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private SocialType socialType;   // GOOGLE, KAKAO, NAVER
+
+    @Column(length = 100)
+    private String socialId;
 }
