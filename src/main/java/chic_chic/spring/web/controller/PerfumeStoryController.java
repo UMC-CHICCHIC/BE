@@ -3,7 +3,7 @@ package chic_chic.spring.web.controller;
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.web.dto.PerfumeStoryDetailResponse;
 import chic_chic.spring.web.dto.PerfumeStoryResponse;
-import chic_chic.spring.web.service.PerfumeStoryService;
+import chic_chic.spring.service.perfumestoryservice.PerfumeStoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

@@ -37,7 +37,11 @@ public enum ErrorStatus implements BaseErrorCode {
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
     // 향수 이야기 관련 에러
-    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다.");
+    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다."),
+
+    // 향수 일기장(댓글) 조회 실패 에러
+    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Diary not found"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "Comment not found");
 
     private final HttpStatus httpStatus;
     private final String code;

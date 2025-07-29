@@ -1,4 +1,4 @@
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.PerfumeDiary;
 
 import lombok.Getter;
 import lombok.Setter;
