@@ -39,7 +39,10 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
-                        ).permitAll()
+                        ).permitAll() // Swagger 문서 열기 허용
+                        .requestMatchers(
+                                "/auth/**", "/login", "/signup"
+                        ).permitAll() // 회원가입, 로그인은 인증 없이 허용
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
