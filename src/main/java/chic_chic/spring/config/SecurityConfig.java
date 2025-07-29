@@ -47,9 +47,6 @@ public class SecurityConfig {
                                 "/consult-posts/**"
                         ).permitAll()
 
-                       // .requestMatchers(HttpMethod.POST, "/consult-posts").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
-
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
