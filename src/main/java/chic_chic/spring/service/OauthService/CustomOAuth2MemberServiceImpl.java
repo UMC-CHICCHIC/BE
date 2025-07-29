@@ -20,7 +20,7 @@ public class CustomOAuth2MemberServiceImpl extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String provider = userRequest.getClientRegistration().getRegistrationId(); // google or kakao
+        String provider = userRequest.getClientRegistration().getRegistrationId();
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String providerId = null;
@@ -44,17 +44,15 @@ public class CustomOAuth2MemberServiceImpl extends DefaultOAuth2UserService {
                 }
             }
         } else if (socialType == SocialType.NAVER) {
-            // 네이버 사용자 정보 구조 파싱
             Map<String, Object> response = (Map<String, Object>) attributes.get("response");
             if (response != null) {
                 providerId = (String) response.get("id");
                 email = (String) response.get("email");
-                name = (String) response.get("name");  // 또는 "nickname"
+                name = (String) response.get("name");
             }
         }
 
 
-        // 회원 조회 또는 생성
         oauth2MemberService.findOrCreateOauthMember(socialType, providerId, email, name);
 
         return oAuth2User;

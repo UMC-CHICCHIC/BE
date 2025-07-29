@@ -58,7 +58,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Override
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDto loginDto) {
-        // username으로 로그인 시도
         Member member = memberRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
 
@@ -66,7 +65,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
 
-        // JWT 토큰을 email 기반으로 발급
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
 
@@ -81,7 +79,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
-        String email = authentication.getName(); // 토큰 subject = email
+        String email = authentication.getName();
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
