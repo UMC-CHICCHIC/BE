@@ -14,7 +14,7 @@ import lombok.*;
 public class ConsultPost extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long consultPost_Id;
+    private Long consultPostId;
 
     private String title;
 

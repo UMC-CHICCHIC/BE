@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface ConsultPostRepository extends JpaRepository<ConsultPost, Long> {
 
-    Optional<ConsultPost> findByConsultPost_Id(Long consultPostId);
+    Optional<ConsultPost> findByConsultPostId(Long consultPostId);
 
     //postType 별 최신 1개 조회
     Optional<ConsultPost> findFirstByPostTypeOrderByCreatedAtDesc(PostType postType);

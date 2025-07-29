@@ -39,7 +39,7 @@ public class ConsultServiceImpl implements ConsultService{
 
     @Override
     public ConsultPostResponse.EntirePostDto getPost(Long consultPostId){
-        ConsultPost post = consultRepository.findByConsultPost_Id(consultPostId)
+        ConsultPost post = consultRepository.findByConsultPostId(consultPostId)
                 .orElseThrow(()-> new GeneralException(ErrorStatus.CONSULT_POST_NOT_FOUND));
         return ConsultPostConverter.toEntirePostDto(post);
     }

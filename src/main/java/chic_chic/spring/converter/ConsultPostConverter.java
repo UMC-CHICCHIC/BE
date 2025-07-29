@@ -25,7 +25,7 @@ public class ConsultPostConverter {
 
     public static ConsultPostResponse.LatestDto toLatestDto(ConsultPost consultPost){
         return ConsultPostResponse.LatestDto.builder()
-                .consultId(consultPost.getConsultPost_Id())
+                .consultId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .content(consultPost.getContent())
@@ -45,7 +45,7 @@ public class ConsultPostConverter {
         return ConsultPostResponse.EntirePostDto.builder()
                 .memberId(consultPost.getMember().getId())
                 .nickname(consultPost.getMember().getNickname())
-                .consultPostId(consultPost.getConsultPost_Id())
+                .consultPostId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .content(consultPost.getContent())
@@ -56,7 +56,7 @@ public class ConsultPostConverter {
 
     public static ConsultPostResponse.PreviewDto toPreviewDto(ConsultPost consultPost){
         return ConsultPostResponse.PreviewDto.builder()
-                .consultId(consultPost.getConsultPost_Id())
+                .consultId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .imageUrl(consultPost.getImageUrl())
