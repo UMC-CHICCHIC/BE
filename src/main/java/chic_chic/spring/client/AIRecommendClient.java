@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 @Component
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class AIRecommendClient {
         AIRequestDto request = convertToAIRequest(answers);
 
         return restTemplate.postForObject(
-                "",
+                "http://192.168.2.19:8000/recommend_by_test",
                 request,
                 AIResponseDto.class
         );
@@ -28,29 +29,39 @@ public class AIRecommendClient {
 
     // 내부 매핑 함수
     private AIRequestDto convertToAIRequest(List<AnswerDto> answers) {
-        String gender = null, concentration = null, scents = null, baseNote = null, middleNote = null;
+        String gender = null, concentration = null, scents = null, baseNote = null;
+        List<String> middleNotes = new ArrayList<>();
 
         for (AnswerDto answer : answers) {
             switch (answer.getQuestionId()) {
                 case 1 -> gender = switch (answer.getOptionId()) {
-                    case 1 -> "men"; case 2 -> "women"; case 3 -> "unisex"; case 4 -> "any"; default -> null;
+                    case 101 -> "men"; case 102 -> "women"; case 103 -> "unisex"; case 104 -> "any"; default -> null;
                 };
                 case 2 -> concentration = switch (answer.getOptionId()) {
-                    case 1 -> "edt"; case 2 -> "edp"; case 3 -> "parfum"; case 4 -> "any"; default -> null;
+                    case 201 -> "edt"; case 202 -> "edp"; case 203 -> "parfum"; case 204 -> "any"; default -> null;
                 };
                 case 3 -> scents = switch (answer.getOptionId()) {
-                    case 1 -> "woody"; case 2 -> "floral"; case 3 -> "fresh"; case 4 -> "sweet"; default -> null;
+                    case 301 -> "woody"; case 302 -> "floral"; case 303 -> "fresh"; case 304 -> "sweet"; default -> null;
                 };
                 case 4 -> baseNote = switch (answer.getOptionId()) {
-                    case 1 -> "sandalwood"; case 2 -> "musk"; case 3 -> "amber"; case 4 -> "vetiver"; default -> null;
+                    case 401 -> "sandalwood"; case 402 -> "musk"; case 403 -> "amber"; case 404 -> "vetiver"; default -> null;
                 };
-                case 5 -> middleNote = switch (answer.getOptionId()) {
-                    case 1 -> "jasmine"; case 2 -> "rose"; case 3 -> "spicy"; case 4 -> "fruity"; default -> null;
-                };
+                case 5 -> middleNotes.add(switch (answer.getOptionId()) {
+                    case 501 -> "jasmine"; case 502 -> "rose"; case 503 -> "spicy"; case 504 -> null; default -> null;
+                });
+                case 6 -> middleNotes.add(switch (answer.getOptionId()) {
+                    case 601 -> "fruity"; case 602 -> "citrus"; case 603 -> "green"; case 604 -> null; default -> null;
+                });
+                case 7 -> middleNotes.add(switch (answer.getOptionId()) {
+                    case 701 -> "powdery"; case 702 -> "soapy"; case 703 -> "clean"; case 704 -> null; default -> null;
+                });
             }
         }
 
-        return new AIRequestDto(gender, concentration, scents, baseNote, middleNote);
-    }
-}
+        // null 값 제거
+        middleNotes.removeIf(note -> note == null);
 
+        return new AIRequestDto(gender, concentration, scents, baseNote, middleNotes);
+    }
+
+}

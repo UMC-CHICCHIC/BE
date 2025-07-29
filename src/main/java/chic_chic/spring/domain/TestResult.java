@@ -10,21 +10,22 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "test_result")
 public class TestResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "test_id")
     private Long testId;
     
     private Integer perfumeId;
-    private Long userId;
+    private Long memberId;
     private String perfumeName;
     private String notes;
     private LocalDateTime createdAt;
 
-    //파라미터 존재 생성자
-    public TestResult(Integer perfumeId, Long userId, String perfumeName, String notes, LocalDateTime createdAt) {
+    public TestResult(Integer perfumeId, Long memberId, String perfumeName, String notes, LocalDateTime createdAt) {
         this.perfumeId = perfumeId;
-        this.userId = userId;
+        this.memberId = memberId;
         this.perfumeName = perfumeName;
         this.notes = notes;
         this.createdAt = createdAt;

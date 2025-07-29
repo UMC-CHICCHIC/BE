@@ -16,5 +16,5 @@ public class AIRequestDto {
     private String concentration;
     private String scents;
     private String base_note;
-    private String middle_note;
+    private List<String> middle_note;
 }
