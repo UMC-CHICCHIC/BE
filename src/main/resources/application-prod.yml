@@ -1,0 +1,28 @@
+### 서버 배포용
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://chicchic-database.czgk8qe8sbqf.ap-northeast-2.rds.amazonaws.com:3306/mydb?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: chicchic123!
+
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: update
+        default_batch_fetch_size: 1000
+
+
+jwt:
+  secret: ChicchicProject_dEvelop!0822
+
