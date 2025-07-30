@@ -6,6 +6,7 @@ import chic_chic.spring.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -38,10 +39,20 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**",
                                 "/test",
-                                "/test/questions"
+                                "/test/questions",
+                                "/swagger-resources/**"
+                        ).permitAll() // Swagger 문서 열기 허용
+
+                        .requestMatchers(HttpMethod.GET,
+                                "/consult-posts",
+                                "/consult-posts/**"
                         ).permitAll()
+                                       
+                        .requestMatchers(
+                                "/auth/**", "/login", "/signup"
+                        ).permitAll() // 회원가입, 로그인은 인증 없이 허용
+
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
