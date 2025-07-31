@@ -40,16 +40,15 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**"
-                        ).permitAll() // Swagger 문서 열기 허용
+                        ).permitAll()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/consult-posts",
                                 "/consult-posts/**"
                         ).permitAll()
-                                       
-                        .requestMatchers(
-                                "/auth/**", "/login", "/signup"
-                        ).permitAll() // 회원가입, 로그인은 인증 없이 허용
+
+                        // .requestMatchers(HttpMethod.POST, "/consult-posts").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
 
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
