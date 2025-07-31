@@ -36,9 +36,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
-        if(memberRepository.findByNickname(joinDto.getNickname()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
-        }
         Member member = Member.builder()
                 .username(joinDto.getUsername())
                 .email(joinDto.getEmail())
