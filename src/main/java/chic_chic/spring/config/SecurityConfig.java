@@ -49,8 +49,10 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**"
-                        ).permitAll()
+                                "/swagger-resources/**",
+                                "/categories"  //카테고리는 그냥 접근가능
+                        ).permitAll() // Swagger 문서 열기 허용
+
                         .requestMatchers(HttpMethod.GET,
                                 "/consult-posts",
                                 "/consult-posts/**"
