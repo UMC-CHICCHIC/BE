@@ -3,7 +3,7 @@ package chic_chic.spring.config;
 import chic_chic.spring.apiPayload.exception.handler.CustomOAuth2SuccessHandler;
 import chic_chic.spring.auth.CustomAccessDeniedHandler;
 import chic_chic.spring.auth.CustomAuthenticationEntryPoint;
-import chic_chic.spring.jwt.JwtAuthenticationFilter;
+import chic_chic.spring.config.jwt.JwtAuthenticationFilter;
 import chic_chic.spring.service.OauthService.CustomOAuth2MemberServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

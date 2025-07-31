@@ -1,4 +1,4 @@
-package chic_chic.spring.jwt;
+package chic_chic.spring.config.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

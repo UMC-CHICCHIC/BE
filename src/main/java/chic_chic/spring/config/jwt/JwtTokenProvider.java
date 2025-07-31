@@ -101,4 +101,13 @@ public class JwtTokenProvider {
         }
         return getAuthentication(accessToken);
     }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.valueOf(claims.getSubject());  // subject에 ID를 담도록 토큰 생성 시 변경 필요
+    }
 }
