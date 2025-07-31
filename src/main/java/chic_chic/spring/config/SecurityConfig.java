@@ -64,7 +64,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {  // cors 설정
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOriginPatterns(List.of("*")); // 운영에서는 정확한 오리진을 넣는 게 안전함
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));

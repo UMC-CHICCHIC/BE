@@ -42,3 +42,7 @@ cloud:
       static: ${cloud.aws.region.static}
     s3:
       bucket: ${cloud.aws.s3.bucket}
+
+
+server:
+  forward-headers-strategy: framework
