@@ -84,11 +84,15 @@ public class JwtTokenProvider {
 
     public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(Constants.AUTH_HEADER);
+
+
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(Constants.TOKEN_PREFIX)) {
             return bearerToken.substring(Constants.TOKEN_PREFIX.length());
         }
         return null;
     }
+
 
     public Authentication extractAuthentication(HttpServletRequest request) {
         String accessToken = resolveToken(request);
@@ -96,5 +100,14 @@ public class JwtTokenProvider {
             throw new MemberHandler(ErrorStatus.INVALID_TOKEN);
         }
         return getAuthentication(accessToken);
+    }
+
+    public Long getUserIdFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.valueOf(claims.getSubject());  // subject에 ID를 담도록 토큰 생성 시 변경 필요
     }
 }

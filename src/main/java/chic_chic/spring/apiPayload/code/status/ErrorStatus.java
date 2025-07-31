@@ -28,7 +28,7 @@ public enum ErrorStatus implements BaseErrorCode {
     CONSULT_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "CONSULT_POST4001", "해당하는 게시글이 없습니다."),
 
     // 이미지 과련 에러
-    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "IMAGE_UPLOAD4001", "첨부하 이미지의 크기가 너무 큽니다."),
+    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "IMAGE_UPLOAD4001", "첨부하는 이미지의 크기가 너무 큽니다."),
     NO_IMAGE_EXIST(HttpStatus.NOT_FOUND, "IMAGE_UPLOAD4002", "해당 이미지를 찾을 수 없습니다."),
     FAIL_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "IMAGE_UPLOAD5001", "S3에 이미지 업로드가 실패했습니다."),
     FAIL_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "IMAGE_UPLOAD5002", "이미지 삭제를 실패했습니다."),
@@ -37,7 +37,11 @@ public enum ErrorStatus implements BaseErrorCode {
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
     // 향수 이야기 관련 에러
-    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다.");
+    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다."),
+
+    // 향수 일기장(댓글) 조회 실패 에러
+    DIARY_NOT_FOUND(HttpStatus.NOT_FOUND, "D001", "Diary not found"),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "C001", "Comment not found");
 
     private final HttpStatus httpStatus;
     private final String code;
