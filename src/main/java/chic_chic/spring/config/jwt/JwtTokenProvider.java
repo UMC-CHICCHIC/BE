@@ -84,11 +84,15 @@ public class JwtTokenProvider {
 
     public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(Constants.AUTH_HEADER);
+
+
+
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(Constants.TOKEN_PREFIX)) {
             return bearerToken.substring(Constants.TOKEN_PREFIX.length());
         }
         return null;
     }
+
 
     public Authentication extractAuthentication(HttpServletRequest request) {
         String accessToken = resolveToken(request);
