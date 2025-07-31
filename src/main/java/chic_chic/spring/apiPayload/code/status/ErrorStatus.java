@@ -17,16 +17,27 @@ public enum ErrorStatus implements BaseErrorCode {
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
 
-    // 멤버 관려 에러
+    // 멤버 관련 에러
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
 
     // 토큰 유효 에러
     INVALID_TOKEN(HttpStatus.NOT_FOUND, "TOKEN4001", "토큰이 없습니다."),
 
-    // 예시,,,
-    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다.");
+    // 추천 게시글 관련 에러
+    CONSULT_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "CONSULT_POST4001", "해당하는 게시글이 없습니다."),
 
+    // 이미지 과련 에러
+    FILE_TOO_LARGE(HttpStatus.BAD_REQUEST, "IMAGE_UPLOAD4001", "첨부하는 이미지의 크기가 너무 큽니다."),
+    NO_IMAGE_EXIST(HttpStatus.NOT_FOUND, "IMAGE_UPLOAD4002", "해당 이미지를 찾을 수 없습니다."),
+    FAIL_UPLOAD(HttpStatus.INTERNAL_SERVER_ERROR, "IMAGE_UPLOAD5001", "S3에 이미지 업로드가 실패했습니다."),
+    FAIL_DELETE(HttpStatus.INTERNAL_SERVER_ERROR, "IMAGE_UPLOAD5002", "이미지 삭제를 실패했습니다."),
+
+    // 예시,,,
+    ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
+
+    // 향수 이야기 관련 에러
+    PERFUME_STORY_NOT_FOUND(HttpStatus.NOT_FOUND, "STORY4001", "해당 향수 이야기를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
@@ -48,7 +59,6 @@ public enum ErrorStatus implements BaseErrorCode {
                 .code(code)
                 .isSuccess(false)
                 .httpStatus(httpStatus)
-                .build()
-                ;
+                .build();
     }
 }

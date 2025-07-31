@@ -36,10 +36,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
-        if (memberRepository.findByNickname(joinDto.getNickname()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
-        }
-
         Member member = Member.builder()
                 .username(joinDto.getUsername())
                 .email(joinDto.getEmail())
@@ -65,25 +61,28 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
         }
 
-        String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
+        // JWT 토큰 생성
+        String accessToken = jwtTokenProvider.createAccessToken(member.getUsername());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getUsername());
+
+        // 리프레시 토큰 저장 로직 필요 (DB 또는 캐시)
 
         return MemberResponseDTO.LoginResultDTO.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .refreshToken(refreshToken)  // DTO에 리프레시 토큰 필드 추가 필요
                 .build();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request) {
+    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request){
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
-        String email = authentication.getName();
+        String username = authentication.getName();
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
-
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberConverter.toMemberInfo(member);
     }
+
 }
