@@ -1,6 +1,6 @@
 package chic_chic.spring.domain.repository;
 
-import chic_chic.spring.domain.enums.SocialType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import chic_chic.spring.domain.Member;
 
@@ -10,5 +10,4 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
     Optional<Member> findByEmail(String email);
     Optional<Member> findByNickname(String nickname);
-    Optional<Member> findBySocialTypeAndSocialId(SocialType socialType, String socialId);
-}
+

@@ -22,7 +22,23 @@ spring:
           auto: update
         default_batch_fetch_size: 1000
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+      resolve-lazily: true
+
 
 jwt:
   secret: ${JWT_SECRET}
 
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${cloud.aws.credentials.accessKey}
+      secretKey: ${cloud.aws.credentials.secretKey}
+    region:
+      static: ${cloud.aws.region.static}
+    s3:
+      bucket: ${cloud.aws.s3.bucket}
