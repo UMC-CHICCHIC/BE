@@ -36,7 +36,7 @@ public class MemberController {
     @GetMapping("/info")
     @Operation(summary = "유저 내 정보 조회 API - 인증 필요",
             description = "유저가 내 정보를 조회하는 API입니다.",
-            security = { @SecurityRequirement(name = "JWT TOKEN") }
+            security = { @SecurityRequirement(name = "JWT") }
     )
     public ApiResponse<MemberResponseDTO.MemberInfoDTO> getMyInfo(HttpServletRequest request) {
         return ApiResponse.onSuccess(memberCommandService.getMemberInfo(request));
