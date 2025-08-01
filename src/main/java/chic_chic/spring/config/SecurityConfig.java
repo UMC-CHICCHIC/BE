@@ -23,6 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.time.Duration;
 import java.util.List;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -49,8 +51,12 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-resources/**"
-                                ,"/categories"
+                                "/swagger-resources/**",
+                                "/categories",
+                                "/diary",
+                                "/diary/**",
+                                "/perfume-stories",
+                                "/perfume-stories/**"
                         ).permitAll() // Swagger 문서 열기 허용
 
                         .requestMatchers(HttpMethod.GET,
@@ -58,7 +64,6 @@ public class SecurityConfig {
                                 "/consult-posts/**"
                         ).permitAll()
 
-                        // .requestMatchers(HttpMethod.POST, "/consult-posts").authenticated()
                         .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
 
                         .requestMatchers(
@@ -73,7 +78,7 @@ public class SecurityConfig {
                         .successHandler(customOAuth2SuccessHandler)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(cors -> {});  // CORS는 Bean에서 설정하므로 빈 설정은 그대로 둠
+                .cors(withDefaults()); // CORS는 Bean에서 설정하므로 빈 설정은 그대로 둠
 
         return http.build();
     }
