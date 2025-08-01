@@ -1,4 +1,4 @@
-package chic_chic.spring.web.service;
+package chic_chic.spring.service.perfumestoryservice;
 
 import chic_chic.spring.apiPayload.exception.GeneralException;
 import chic_chic.spring.domain.entity.PerfumeStory;

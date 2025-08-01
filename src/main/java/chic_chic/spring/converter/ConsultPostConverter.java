@@ -56,6 +56,8 @@ public class ConsultPostConverter {
 
     public static ConsultPostResponse.PreviewDto toPreviewDto(ConsultPost consultPost){
         return ConsultPostResponse.PreviewDto.builder()
+                .memberId(consultPost.getMember().getId())
+                .nickname(consultPost.getMember().getNickname())
                 .consultId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
