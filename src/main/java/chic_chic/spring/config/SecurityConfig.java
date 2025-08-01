@@ -39,6 +39,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptions -> exceptions
@@ -46,29 +47,37 @@ public class SecurityConfig {
                         .accessDeniedHandler(accessDeniedHandler)
                 )
                 .authorizeHttpRequests(auth -> auth
+                        // preflight은 항상 허용
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 공개 리소스 / 인증 없이
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/categories",
-                                "/diary",
-                                "/diary/**",
-                                "/perfume-stories",
-                                "/perfume-stories/**"
-                        ).permitAll() // Swagger 문서 열기 허용
+                                "/categories"
+                        ).permitAll()
 
                         .requestMatchers(HttpMethod.GET,
                                 "/consult-posts",
                                 "/consult-posts/**"
                         ).permitAll()
-
                         .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
+                        .requestMatchers("/auth/**", "/login", "/signup").permitAll()
 
-                        .requestMatchers(
-                                "/auth/**", "/login", "/signup"
-                        ).permitAll()
+                        // 향수 일기장 관련: 공개 목록/상세는 허용
+                        .requestMatchers(HttpMethod.GET, "/diary/public").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/diary/*/comments").permitAll() // public/private 구분은 service 에서 진행
+                        .requestMatchers(HttpMethod.GET, "/diary/*").permitAll() // 개별 일기 상세 (공개면 누구나, 비공개면 service에서 owner 체크)
+
+                        // 인증 필요: 내 일기 조회, 작성, 댓글 작성
+                        .requestMatchers(HttpMethod.GET, "/diary/my").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/diary").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/diary/*/comments").authenticated()
+
+                        // 그 외는 인증 필요
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -77,8 +86,7 @@ public class SecurityConfig {
                         )
                         .successHandler(customOAuth2SuccessHandler)
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(withDefaults()); // CORS는 Bean에서 설정하므로 빈 설정은 그대로 둠
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -86,7 +94,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {  // cors 설정
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*")); // 운영 환경에서는 정확한 도메인 설정 권장
+        config.setAllowedOriginPatterns(List.of("*")); // 운영 환경에서는 정확한 도메인만 명시
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
