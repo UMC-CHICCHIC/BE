@@ -52,13 +52,20 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/swagger-resources/**",
-                                "/categories"  //카테고리는 그냥 접근가능
+                                "/categories",
+                                "/diary",
+                                "/diary/**",
+                                "/perfume-stories",
+                                "/perfume-stories/**"
                         ).permitAll() // Swagger 문서 열기 허용
 
                         .requestMatchers(HttpMethod.GET,
                                 "/consult-posts",
                                 "/consult-posts/**"
                         ).permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
+
                         .requestMatchers(
                                 "/auth/**", "/login", "/signup"
                         ).permitAll()
@@ -71,7 +78,7 @@ public class SecurityConfig {
                         .successHandler(customOAuth2SuccessHandler)
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(withDefaults());
+                .cors(withDefaults()); // CORS는 Bean에서 설정하므로 빈 설정은 그대로 둠
 
         return http.build();
     }
