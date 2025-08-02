@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
+                                "/products/popular",         //인기제품은 인증에 관계없이출력
                                 "/test",
                                 "/test/questions",
                                 "/swagger-resources/**",
