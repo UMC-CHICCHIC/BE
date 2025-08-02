@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "/test",
                                 "/test/questions",
                                 "/swagger-resources/**",
-                                "/categories"
+                                "/categories",
+                                 "/products/**" 
                         ).permitAll()
 
 
