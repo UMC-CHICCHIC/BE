@@ -18,12 +18,12 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public List<CategoryResponse> getCategories(CategoryType type) {
+        System.out.println("[Service] type 파라미터: " + type); // null or NOTE
         List<Category> categories = (type == null)
                 ? categoryRepository.findAll(Sort.by(Sort.Order.asc("order")))
                 : categoryRepository.findByType(type, Sort.by(Sort.Order.asc("order")));
-        return categories.stream()
-                .map(CategoryResponse::from)
-                .toList();
-    }
 
+        System.out.println("[Service] 조회된 카테고리 수: " + categories.size());
+        return categories.stream().map(CategoryResponse::from).toList();
+    }
 }

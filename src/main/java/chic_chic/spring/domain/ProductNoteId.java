@@ -14,6 +14,7 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class ProductNoteId implements Serializable {
 
+    // 복합키를 위한 entity
     @Column(name = "product_id")
     private Long productId;
 

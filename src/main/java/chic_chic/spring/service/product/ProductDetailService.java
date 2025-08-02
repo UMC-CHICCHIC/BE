@@ -1,4 +1,4 @@
-package chic_chic.spring.web.service;
+package chic_chic.spring.service.product;
 
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.domain.repository.ProductRepository;
