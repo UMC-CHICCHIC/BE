@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;  // 기존 JwtTokenProvider로 변경
+    private final JwtTokenProvider jwtTokenProvider;  
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -30,7 +30,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         System.out.println("요청 URI: " + uri);
 
-        // 로그인, 회원가입, 토큰 재발급 등 인증 필터를 적용하지 않을 URI 패턴 지정
         if (uri.startsWith("/api/v1/auth/login") ||
                 uri.startsWith("/api/v1/auth/register") ||
                 uri.startsWith("/api/v1/auth/reissue")) {
