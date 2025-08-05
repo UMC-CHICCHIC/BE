@@ -10,4 +10,5 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findTop4ByOrderByItemRatingDesc();
+    //Spring Data JPA가 메서드명을 해석해서 SQL 쿼리를 자동 생성함.
 }

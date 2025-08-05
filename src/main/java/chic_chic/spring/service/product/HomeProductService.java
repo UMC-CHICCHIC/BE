@@ -9,10 +9,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class HomeProductService {
 
     private final ProductRepository productRepository;
 
+    // 인기 상품 4개 조회 (메인 페이지용)
     public List<Product> getPopularProducts() {
         return productRepository.findTop4ByOrderByItemRatingDesc();
     }
