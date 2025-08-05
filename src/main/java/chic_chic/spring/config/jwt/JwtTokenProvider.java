@@ -39,7 +39,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + accessTokenValidity);
         return Jwts.builder()
-                .setSubject(email)  // subject에 이메일 넣음
+                .setSubject(email)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + refreshTokenValidity);
         return Jwts.builder()
-                .setSubject(email)  // subject에 이메일 넣음
+                .setSubject(email)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -106,6 +106,8 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
     }
+
 
 }

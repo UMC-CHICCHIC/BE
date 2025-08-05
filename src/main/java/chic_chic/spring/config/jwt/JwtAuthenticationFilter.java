@@ -1,6 +1,5 @@
 package chic_chic.spring.config.jwt;
 
-import chic_chic.spring.config.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,20 +19,24 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;  // 기존 JwtTokenProvider로 변경
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
             throws ServletException, IOException {
 
         String uri = request.getRequestURI();
         System.out.println("요청 URI: " + uri);
 
-        // 로그인, 회원가입, 토큰 재발급 등 인증 필터를 적용하지 않을 URI 패턴 지정
+        // 인증 없이 통과시킬 경로들
         if (uri.startsWith("/api/v1/auth/login") ||
                 uri.startsWith("/api/v1/auth/register") ||
-                uri.startsWith("/api/v1/auth/reissue")) {
+                uri.startsWith("/api/v1/auth/reissue") ||
+                uri.startsWith("/oauth2") ||
+                uri.startsWith("/login")) {
             chain.doFilter(request, response);
             return;
         }
@@ -46,15 +49,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                System.out.println("JWT 인증 처리 중 오류: " + e.getMessage());
+                // 예외 로그 출력
+                System.out.println("JWT 인증 오류: " + e.getMessage());
             }
-        } else {
-            System.out.println("JWT 없음 또는 유효하지 않음");
         }
 
         chain.doFilter(request, response);

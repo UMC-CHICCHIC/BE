@@ -17,7 +17,7 @@ public class Member extends BaseEntity {
     private Long id;
 
     // 비밀번호
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     // 이메일
