@@ -32,25 +32,25 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    private final long accessTokenValidity = 1000L * 60 * 60;
-    private final long refreshTokenValidity = 1000L * 60 * 60 * 24 * 7;
+    private final long accessTokenValidity = 1000L * 60 * 60; // 1시간
+    private final long refreshTokenValidity = 1000L * 60 * 60 * 24 * 7; // 7일
 
-    public String createAccessToken(String username) {
+    public String createAccessToken(String email) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + accessTokenValidity);
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)  // subject에 이메일 넣음
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String createRefreshToken(String username) {
+    public String createRefreshToken(String email) {
         Date now = new Date();
         Date expiry = new Date(now.getTime() + refreshTokenValidity);
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)  // subject에 이메일 넣음
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token);  // 유효성 검증
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
@@ -76,23 +76,20 @@ public class JwtTokenProvider {
                 .parseClaimsJws(token)
                 .getBody();
 
-        String username = claims.getSubject();
+        String email = claims.getSubject();
 
-        User principal = new User(username, "", Collections.emptyList());
+        User principal = new User(email, "", Collections.emptyList());
         return new UsernamePasswordAuthenticationToken(principal, token, principal.getAuthorities());
     }
 
     public static String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(Constants.AUTH_HEADER);
 
-
-
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(Constants.TOKEN_PREFIX)) {
             return bearerToken.substring(Constants.TOKEN_PREFIX.length());
         }
         return null;
     }
-
 
     public Authentication extractAuthentication(HttpServletRequest request) {
         String accessToken = resolveToken(request);
@@ -102,12 +99,13 @@ public class JwtTokenProvider {
         return getAuthentication(accessToken);
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parserBuilder()
+    public String getEmailFromToken(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
-                .getBody();
-        return Long.valueOf(claims.getSubject());  // subject에 ID를 담도록 토큰 생성 시 변경 필요
+                .getBody()
+                .getSubject();
     }
+
 }

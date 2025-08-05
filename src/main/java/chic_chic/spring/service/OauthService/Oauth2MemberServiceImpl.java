@@ -20,7 +20,6 @@ public class Oauth2MemberServiceImpl implements Oauth2MemberService {
         return memberRepository.findBySocialTypeAndSocialId(socialType, socialId)
                 .orElseGet(() -> {
                     Member member = Member.builder()
-                            .username(email)
                             .email(email)
                             .nickname(name)
                             .password(null)
