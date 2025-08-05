@@ -1,4 +1,5 @@
-package chic_chic.spring.web.dto;
+
+package chic_chic.spring.web.dto.category;
 
 import chic_chic.spring.domain.Category;
 import lombok.AllArgsConstructor;
