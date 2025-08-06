@@ -1,5 +1,5 @@
 package chic_chic.spring.domain.enums;
 
 public enum SocialType {
-    KAKAO
+    NAVER,KAKAO,GOOGLE
 }

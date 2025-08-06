@@ -1,5 +1,6 @@
-package chic_chic.spring.jwt;
+package chic_chic.spring.config.jwt;
 
+import chic_chic.spring.config.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,19 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
         System.out.println("요청 URI: " + uri);
-        System.out.println("Authorization 헤더: " + request.getHeader("Authorization"));
 
+        String token = JwtTokenProvider.resolveToken(request);
 
-        // Swagger 요청은 필터 적용 X
-        if (uri.contains("swagger") || uri.contains("api-docs")) {
-            chain.doFilter(request, response);
-            return;
-        }
-
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
-            if (jwtUtil.isTokenValid(token)) {
+        if (token != null && jwtUtil.isTokenValid(token)) {
+            try {
                 String email = jwtUtil.extractEmail(token);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
@@ -48,11 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                System.out.println("JWT 인증 처리 중 오류: " + e.getMessage());
             }
+        } else {
+            System.out.println("JWT 없음 또는 유효하지 않음");
         }
 
         chain.doFilter(request, response);
     }
+
 }
