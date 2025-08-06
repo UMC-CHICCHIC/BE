@@ -13,4 +13,10 @@ public interface MemberCommandService {
 
     @Transactional(readOnly = true)
     MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request);
+
+    @Transactional
+    MemberResponseDTO.UpdateResultDto updateMemberInfo(MemberRequestDTO.UpdateDto updateDto, HttpServletRequest request);
+
+    void withdraw(HttpServletRequest request);
+
 }

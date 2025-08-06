@@ -1,6 +1,7 @@
 package chic_chic.spring.service.MemberService;
 
 import chic_chic.spring.apiPayload.code.status.ErrorStatus;
+import chic_chic.spring.apiPayload.exception.handler.CustomException;
 import chic_chic.spring.apiPayload.exception.handler.MemberHandler;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
 import chic_chic.spring.converter.MemberConverter;
@@ -11,6 +12,7 @@ import chic_chic.spring.domain.repository.RefreshTokenRepository;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +33,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Transactional
     public MemberResponseDTO.JoinResultDTO signup(MemberRequestDTO.JoinDto joinDto) {
         String encodedPassword = passwordEncoder.encode(joinDto.getPassword());
-
 
 
         if (memberRepository.findByEmail(joinDto.getEmail()).isPresent()) {
@@ -84,12 +85,61 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Transactional(readOnly = true)
     @Override
-    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request){
+    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
         String email = authentication.getName();  // 이름 대신 email이 담긴다고 가정
 
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberConverter.toMemberInfo(member);
+    }
+
+    @Transactional
+    public MemberResponseDTO.UpdateResultDto updateMemberInfo(MemberRequestDTO.UpdateDto dto, HttpServletRequest request) {
+        String token = JwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getEmailFromToken(token);
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if (member.getSocialType() != null) {
+            // 소셜 로그인 회원: 닉네임, 휴대전화 수정 가능
+            if (dto.getNickname() != null) {
+                member.updateNickname(dto.getNickname());
+            }
+            if (dto.getPhoneNumber() != null) {
+                member.updatePhoneNumber(dto.getPhoneNumber());
+            }
+            // 이메일 수정 불가
+        } else {
+            // 일반 회원: 닉네임, 휴대전화, 이메일 수정 가능
+            if (dto.getNickname() != null) {
+                member.updateNickname(dto.getNickname());
+            }
+            if (dto.getPhoneNumber() != null) {
+                member.updatePhoneNumber(dto.getPhoneNumber());
+            }
+
+        }
+
+
+        memberRepository.save(member);
+
+        return MemberResponseDTO.UpdateResultDto.builder()
+                .nickname(member.getNickname())
+                .phoneNumber(member.getPhoneNumber())
+                .build();
+    }
+
+    @Override
+    @Transactional
+    public void withdraw(HttpServletRequest request) {
+        String token = JwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getEmailFromToken(token);
+
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        memberRepository.delete(member);
     }
 }

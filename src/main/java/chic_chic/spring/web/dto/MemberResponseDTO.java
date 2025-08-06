@@ -1,9 +1,6 @@
 package chic_chic.spring.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -38,4 +35,14 @@ public class MemberResponseDTO {
         private String nickname;
 
     }
+
+    @Getter
+    @Setter
+    @Builder
+    public static class UpdateResultDto {
+        private String nickname;
+        private String phoneNumber;
+    }
 }
+
+
