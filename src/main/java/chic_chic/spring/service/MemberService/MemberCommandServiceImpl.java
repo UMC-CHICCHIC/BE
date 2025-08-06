@@ -142,4 +142,16 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         memberRepository.delete(member);
     }
+
+    @Transactional
+    public void logout(HttpServletRequest request) {
+        String token = JwtTokenProvider.resolveToken(request);
+        String email = jwtTokenProvider.getEmailFromToken(token);
+
+        RefreshToken refreshToken = refreshTokenRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        refreshTokenRepository.delete(refreshToken);
+    }
+
 }

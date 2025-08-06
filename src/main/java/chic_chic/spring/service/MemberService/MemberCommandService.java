@@ -19,4 +19,6 @@ public interface MemberCommandService {
 
     void withdraw(HttpServletRequest request);
 
+    void logout(HttpServletRequest request);
+
 }
