@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecommendedPerfumeDto {
-    private Integer perfumeId;
+    private Long productId;
     private String perfumeName;
     private List<String> recommendedNotes;
 }

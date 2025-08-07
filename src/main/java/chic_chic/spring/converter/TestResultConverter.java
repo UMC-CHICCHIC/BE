@@ -9,7 +9,7 @@ public class TestResultConverter {
 
     public RecommendedPerfumeDto toDto(AIResponseDto.AIRecommendedPerfume aiPerfume) {
         return new RecommendedPerfumeDto(
-                aiPerfume.getPerfumeId(),
+                aiPerfume.getProductId(),
                 aiPerfume.getPerfumeName(),
                 aiPerfume.getRecommendedNotes()
         );

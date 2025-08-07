@@ -21,7 +21,7 @@ public class AIRecommendClient {
         AIRequestDto request = convertToAIRequest(answers);
 
         return restTemplate.postForObject(
-                "http://192.168.2.19:8000/recommend_by_test",
+                "http://43.201.229.88:8000/recommend_by_test",
                 request,
                 AIResponseDto.class
         );

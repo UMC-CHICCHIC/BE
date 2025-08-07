@@ -16,7 +16,7 @@ public class AIResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class AIRecommendedPerfume {
-        private Integer perfumeId;
+        private  Long productId;
         private String perfumeName;
         private List<String> recommendedNotes;
     }
