@@ -1,6 +1,7 @@
 package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
+import chic_chic.spring.config.jwt.JwtTokenProvider;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
 import chic_chic.spring.service.MemberService.MemberCommandService;
@@ -9,14 +10,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberCommandService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/api/v1/auth/signup")
     @Operation(summary = "회원가입 API", description = "회원가입을 처리하는 API입니다.")
@@ -77,5 +82,28 @@ public class MemberController {
         memberService.logout(request);
         return ResponseEntity.ok(ApiResponse.onSuccess("로그아웃이 되었습니다."));
     }
+
+    @GetMapping("/member/profile-image")
+    @Operation(summary = "프로필 이미지 조회", security = {@SecurityRequirement(name = "JWT")})
+    public ApiResponse<String> getProfileImage(HttpServletRequest request) {
+        Authentication auth = jwtTokenProvider.extractAuthentication(request);
+        String email = auth.getName();
+
+        String imageUrl = memberService.getProfileImageUrl(email);
+        return ApiResponse.onSuccess(imageUrl);
+    }
+
+    @PutMapping(value = "/member/profile-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "프로필 이미지 수정", security = {@SecurityRequirement(name = "JWT")})
+    public ApiResponse<String> updateProfileImage(
+            @RequestPart("file") MultipartFile file,
+            HttpServletRequest request) {
+        Authentication auth = jwtTokenProvider.extractAuthentication(request);
+        String email = auth.getName();
+
+        String updatedUrl = memberService.updateProfileImage(file, email);
+        return ApiResponse.onSuccess(updatedUrl);
+    }
+
 
 }

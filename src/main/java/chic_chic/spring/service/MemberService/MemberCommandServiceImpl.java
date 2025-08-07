@@ -9,8 +9,10 @@ import chic_chic.spring.domain.Member;
 import chic_chic.spring.domain.RefreshToken;
 import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.domain.repository.RefreshTokenRepository;
+import chic_chic.spring.service.ImageService.S3UploaderService;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
+import chic_chic.spring.web.dto.S3ResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final S3UploaderService s3UploaderService;
 
 
     @Override
@@ -44,6 +48,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
                 .password(encodedPassword)
                 .phoneNumber(joinDto.getPhoneNumber())
                 .nickname(joinDto.getNickname())
+                .profileImageUrl("https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png")
                 .build();
 
         Member savedMember = memberRepository.save(member);
@@ -153,5 +158,32 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         refreshTokenRepository.delete(refreshToken);
     }
+
+    public String getProfileImageUrl(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        if (member.getProfileImageUrl() == null || member.getProfileImageUrl().isEmpty()) {
+            return "https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png";
+        }
+
+        return member.getProfileImageUrl();
+    }
+
+    @Transactional
+    public String updateProfileImage(MultipartFile file, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        // S3에 새 이미지 업로드
+        S3ResponseDto uploadResult = s3UploaderService.upload(file);
+
+        // DB에 새 이미지 URL 저장
+        member.setProfileImageUrl(uploadResult.getUrl());
+        memberRepository.save(member);
+
+        return uploadResult.getUrl();
+    }
+
 
 }

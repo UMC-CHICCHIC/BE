@@ -35,6 +35,10 @@ public class Member extends BaseEntity {
     @Column(name = "social_type")
     private SocialType socialType;
 
+    @Setter
+    @Column(nullable = true)
+    private String profileImageUrl;
+
     public void updateNickname(String nickname) {
         this.nickname = nickname;
     }
@@ -42,5 +46,4 @@ public class Member extends BaseEntity {
     public void updatePhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 }

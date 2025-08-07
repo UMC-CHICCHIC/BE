@@ -26,6 +26,7 @@ public class Oauth2MemberServiceImpl implements Oauth2MemberService {
                             .phoneNumber("000-0000-0000")
                             .socialType(socialType)
                             .socialId(socialId)
+                            .profileImageUrl("https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png")
                             .build();
                     return memberRepository.save(member);
                 });
