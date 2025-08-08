@@ -4,7 +4,7 @@ package chic_chic.spring.service.category;
 import chic_chic.spring.domain.Category;
 import chic_chic.spring.domain.enums.CategoryType;
 import chic_chic.spring.domain.repository.CategoryRepository;
-import chic_chic.spring.web.dto.CategoryResponse;
+import chic_chic.spring.web.dto.category.CategoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

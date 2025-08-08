@@ -2,7 +2,7 @@ package chic_chic.spring.service.product;
 
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.domain.repository.ProductRepository;
-import chic_chic.spring.web.dto.ProductDetailResponse;
+import chic_chic.spring.web.dto.product.ProductDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

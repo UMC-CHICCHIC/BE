@@ -57,12 +57,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/home/**",         //메인페이지
-                                "/home/popular-products",
                                 "/test",
                                 "/test/questions",
                                 "/swagger-resources/**",
-                                "/categories",
-                                "/products/**"
+                                "/categories",      //카테고리출력
+                                 "/products/**"     // 제품관련 출력
                         ).permitAll()
 
 
@@ -82,14 +81,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/diary/my").authenticated()
                         .requestMatchers(HttpMethod.POST, "/diary").authenticated()
                         .requestMatchers(HttpMethod.POST, "/diary/*/comments").authenticated()
-
-                        // 리뷰 관련: GET 목록/상세 : 공개
-                        .requestMatchers(HttpMethod.GET, "/perfumes/*/reviews").permitAll()
-
-                        // 리뷰 작성/수정/삭제 : 인증 필요
-                        .requestMatchers(HttpMethod.POST,   "/perfumes/*/reviews").authenticated()
-                        .requestMatchers(HttpMethod.PUT,    "/perfumes/*/reviews/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/perfumes/*/reviews/*").authenticated()
 
                         // 그 외는 인증 필요
                         .anyRequest().authenticated()

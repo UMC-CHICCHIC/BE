@@ -5,6 +5,7 @@ import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.service.TestSubmitService.TestSubmitService;
 import chic_chic.spring.web.dto.RecommendedPerfumeDto;
 import chic_chic.spring.web.dto.TestSubmitRequest;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import chic_chic.spring.domain.repository.MemberRepository;
 
 import java.util.List;
 
+@Tag(name = "TestSubmit", description = "테스트 결과 전달")
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
