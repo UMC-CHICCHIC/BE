@@ -13,6 +13,7 @@ public record ProductDetailResponse(
         String brand,
         String baseNote,
         String middleNote,
+        String imageUrl,
         List<NoteDto> notes
 ) {
     public static ProductDetailResponse from(Product product) {
@@ -25,6 +26,7 @@ public record ProductDetailResponse(
                 product.getBrand(),
                 product.getBaseNote(),
                 product.getMiddleNote(),
+                product.getImageUrl(),
                 product.getProductNotes().stream()
                         .map(pn -> new NoteDto(
                                 pn.getNote().getNote_id(),

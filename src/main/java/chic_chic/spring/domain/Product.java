@@ -34,6 +34,13 @@ public class Product {
     @Column(name = "num_seller")  //  DB 컬럼명을 직접 지정 (에러남)
     private int numSeller;
 
+
+    @Column(name = "Image_url")
+    private String ImageUrl;    // 제품이미지
+
+    @Column(name = "review_count", nullable = false)
+    private int reviewCount;   //임시 리뷰많은순
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductNote> productNotes = new ArrayList<>();
 

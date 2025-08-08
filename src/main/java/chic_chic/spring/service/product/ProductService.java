@@ -74,6 +74,7 @@ public class ProductService {
             case "price" -> Integer.compare(p1.getPrice(), p2.getPrice());
             case "itemRating" -> Double.compare(p1.getItemRating(), p2.getItemRating());
             case "numSeller" -> Integer.compare(p1.getNumSeller(), p2.getNumSeller());
+            case "reviewCount" -> Integer.compare(p1.getReviewCount(), p2.getReviewCount());
             default -> 0;
         };
     }

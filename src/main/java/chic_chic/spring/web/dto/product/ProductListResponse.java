@@ -22,6 +22,7 @@ public class ProductListResponse {
     private String concentration;
     private int price;
     private double itemRating;
+    private String imageUrl;
 
     public static ProductListResponse from(Product product) {
         return ProductListResponse.builder()
@@ -34,6 +35,7 @@ public class ProductListResponse {
                 .concentration(product.getConcentration())
                 .price(product.getPrice())
                 .itemRating(product.getItemRating())
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 
