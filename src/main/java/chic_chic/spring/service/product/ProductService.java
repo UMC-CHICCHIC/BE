@@ -4,7 +4,7 @@ import chic_chic.spring.domain.Category;
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.domain.repository.CategoryRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
-import chic_chic.spring.web.dto.ProductResponse;
+import chic_chic.spring.web.dto.product.ProductListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -18,24 +18,12 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    // 인기 상품 조회 (메인 홈 용도)
-    public List<Product> getPopularProducts() {
-        return productRepository.findTop4ByOrderByItemRatingDesc();
-    }
-
     // 전체 상품 조회 + 정렬 + 필터링
-    public Page<ProductResponse> getProducts(Long catId, String sort, Pageable pageable) {
-        Sort sortSpec = getSortSpec(sort);
-
-        Pageable sortedPageable = PageRequest.of(
-                pageable.getPageNumber(),
-                pageable.getPageSize(),
-                sortSpec
-        );
+    public Page<ProductListResponse> getProducts(Long catId, Pageable pageable) {
 
         if (catId == null) {
-            return productRepository.findAll(sortedPageable)
-                    .map(ProductResponse::from);
+            return productRepository.findAll(pageable)
+                    .map(ProductListResponse::from);
         }
 
         Category category = categoryRepository.findById(catId)
@@ -44,7 +32,7 @@ public class ProductService {
         List<Product> filtered = productRepository.findAll().stream()
                 .filter(product -> filterByCategory(product, category))
                 .sorted((p1, p2) -> {
-                    for (Sort.Order order : sortSpec) {
+                    for (Sort.Order order : pageable.getSort()) {
                         int result = compareByField(order.getProperty(), p1, p2);
                         if (result != 0) return order.isAscending() ? result : -result;
                     }
@@ -52,44 +40,32 @@ public class ProductService {
                 })
                 .toList();
 
-        int start = (int) sortedPageable.getOffset();
-        int end = Math.min(start + sortedPageable.getPageSize(), filtered.size());
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), filtered.size());
 
-        List<ProductResponse> content = filtered.subList(start, end).stream()
-                .map(ProductResponse::from)
+        List<ProductListResponse> content = filtered.subList(start, end).stream()
+                .map(ProductListResponse::from)
                 .toList();
 
-        return new PageImpl<>(content, sortedPageable, filtered.size());
+        return new PageImpl<>(content, pageable, filtered.size());
     }
 
     private boolean filterByCategory(Product product, Category category) {
         return switch (category.getType()) {
+            // 가격 필터
             case PRICE -> switch (category.getName()) {
                 case "5만 원 이하" -> product.getPrice() <= 50000;
                 case "5~10만 원대" -> product.getPrice() > 50000 && product.getPrice() <= 100000;
                 case "10만 원 이상" -> product.getPrice() > 100000;
                 default -> false;
             };
+
+            // 농도 필터
             case CONCENTRATION -> product.getConcentration().equalsIgnoreCase(category.getName());
-            case NOTE -> product.getBaseNote().equalsIgnoreCase(category.getName())
-                    || product.getMiddleNote().equalsIgnoreCase(category.getName());
-        };
-    }
 
-    private Sort getSortSpec(String sort) {
-        if (sort == null) return Sort.by(Sort.Direction.DESC, "numSeller");
-
-        String[] parts = sort.split(",");
-        String field = parts[0];
-        Sort.Direction direction = parts.length > 1 && parts[1].equalsIgnoreCase("asc")
-                ? Sort.Direction.ASC : Sort.Direction.DESC;
-
-        return switch (field) {
-            case "price" -> Sort.by(direction, "price");
-            case "itemRating" -> Sort.by(direction, "itemRating");
-            case "popularity", "sales" -> Sort.by(direction, "numSeller");
-            case "reviewCount", "reviews" -> Sort.by(direction, "reviewCount");     // 리뷰 많은 순 정렬
-            default -> Sort.by(Sort.Direction.DESC, "numSeller");
+            // NOTE → product.notes 안에 category.name과 동일한 note.name이 있는지 확인
+            case NOTE -> product.getNotes().stream()
+                    .anyMatch(note -> note.getNote().equalsIgnoreCase(category.getName()));
         };
     }
 

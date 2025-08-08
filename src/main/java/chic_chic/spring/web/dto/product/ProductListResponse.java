@@ -1,4 +1,5 @@
-package chic_chic.spring.web.dto;
+
+package chic_chic.spring.web.dto.product;
 
 import chic_chic.spring.domain.Product;
 import lombok.AllArgsConstructor;
@@ -16,25 +17,25 @@ public class ProductListResponse {
     private String name;
     private String brand;
     private int ml;
-    private String topNote;
     private String baseNote;
     private String middleNote;
     private String concentration;
     private int price;
     private double itemRating;
+    private String imageUrl;
 
     public static ProductListResponse from(Product product) {
         return ProductListResponse.builder()
-                .id(product.getProductId())
+                .id(product.getProduct_id())
                 .name(product.getName())
                 .brand(product.getBrand())
                 .ml(product.getMl())
-                .topNote(product.getTopNote())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .concentration(product.getConcentration())
                 .price(product.getPrice())
                 .itemRating(product.getItemRating())
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 

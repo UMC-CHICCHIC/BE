@@ -1,7 +1,7 @@
 package chic_chic.spring.apiPayload.exception.handler;
 
-import chic_chic.spring.config.jwt.JwtTokenProvider;
-import jakarta.servlet.ServletException;
+import chic_chic.spring.service.AuthService.AuthService;
+import chic_chic.spring.web.dto.ReIssueResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,17 +17,28 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthService authService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        String registrationId = (String) request.getAttribute("registrationId");
+        String email = extractEmailFromOAuth2User(oAuth2User);
+        if (email == null) {
+            throw new RuntimeException("이메일을 가져올 수 없습니다.");
+        }
 
-        String email = null;
+        // 로그인 처리(AccessToken + RefreshToken 생성 및 저장)
+        ReIssueResponseDTO tokens = authService.login(email);
 
-        email = oAuth2User.getAttribute("email");
+        response.setContentType("application/json;charset=UTF-8");
+        String json = String.format("{\"accesstoken\": \"%s\", \"refreshToken\": \"%s\"}", tokens.getAccessToken(), tokens.getRefreshToken());
+        response.getWriter().write(json);
+        response.getWriter().flush();
+    }
+
+    private String extractEmailFromOAuth2User(OAuth2User oAuth2User) {
+        String email = oAuth2User.getAttribute("email");
 
         if (email == null && oAuth2User.getAttributes().containsKey("kakao_account")) {
             Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttributes().get("kakao_account");
@@ -42,16 +53,6 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
                 email = (String) responseObj.get("email");
             }
         }
-
-        if (email == null) {
-            throw new RuntimeException("이메일을 가져올 수 없습니다. provider 속성을 확인하세요.");
-        }
-
-        String token = jwtTokenProvider.createAccessToken(email);
-
-        response.setContentType("application/json;charset=UTF-8");
-        String json = "{\"token\": \"" + token + "\"}";
-        response.getWriter().write(json);
-        response.getWriter().flush();
+        return email;
     }
 }

@@ -22,6 +22,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + email));
 
-        return new User(member.getEmail(), member.getPassword(), List.of());
+        String password = member.getPassword();
+        if (password == null) {
+            password = "";
+        }
+
+        return new User(member.getEmail(), password, List.of());
     }
 }
