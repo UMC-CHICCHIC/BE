@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
+import lombok.Setter;
 
 public class MemberRequestDTO {
 
@@ -46,4 +47,10 @@ public class MemberRequestDTO {
         private String password;
     }
 
+    @Getter
+    @Setter
+    public static class UpdateDto {
+        private String nickname;
+        private String phoneNumber;
+    }
 }
