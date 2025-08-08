@@ -56,12 +56,12 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/home/**",         //메인페이지
+                                "/home/**",         // 메인페이지
                                 "/test",
                                 "/test/questions",
                                 "/swagger-resources/**",
-                                "/categories",
-                                "/products/**"
+                                "/categories",      // 카테고리 출력
+                                "/products/**"      // 제품 관련 출력
                         ).permitAll()
 
 
