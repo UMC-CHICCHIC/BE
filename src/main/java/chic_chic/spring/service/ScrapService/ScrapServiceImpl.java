@@ -7,6 +7,7 @@ import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
 import chic_chic.spring.domain.repository.ScrapRepository;
 import chic_chic.spring.web.dto.product.ProductListResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ScrapServiceImpl implements ScrapService {
     }
 
     @Override
+    @Transactional
     public void removeScrap(Long memberId, Long productId) {
         Member member = memberRepository.findById(memberId).orElseThrow();
         Product product = productRepository.findById(productId).orElseThrow();
