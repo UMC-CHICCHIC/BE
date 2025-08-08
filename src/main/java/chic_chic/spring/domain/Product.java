@@ -24,4 +24,7 @@ public class Product {
     private int price;           // 가격
 
     private double itemRating;   // 평점 (기준으로 사용)
+    
+    @Column(name = "Image_url")
+    private String ImageUrl;    // 제품이미지
 }
