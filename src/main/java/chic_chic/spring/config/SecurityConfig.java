@@ -57,12 +57,11 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/home/**",         //메인페이지
-                                "/home/popular-products",
                                 "/test",
                                 "/test/questions",
                                 "/swagger-resources/**",
-                                "/categories",
-                                 "/products/**"
+                                "/categories",      //카테고리출력
+                                 "/products/**"     // 제품관련 출력
                         ).permitAll()
 
 
