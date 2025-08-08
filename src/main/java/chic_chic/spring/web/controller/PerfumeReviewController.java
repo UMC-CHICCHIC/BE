@@ -47,7 +47,7 @@ public class PerfumeReviewController {
         return ResponseEntity.ok(ApiResponse.onSuccess(resp));
     }
 
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/{reviewId}")   // 리뷰 삭제
     public ResponseEntity<ApiResponse<Void>> deleteReview(
             @PathVariable Long perfumeId,
             @PathVariable Long reviewId,
