@@ -1,8 +1,10 @@
-package chic_chic.spring.web.controller;
+
+package chic_chic.spring.web.controller.category;
 
 import chic_chic.spring.domain.enums.CategoryType;
-import chic_chic.spring.web.dto.CategoryResponse;
+
 import chic_chic.spring.service.category.CategoryService;
+import chic_chic.spring.web.dto.category.CategoryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
