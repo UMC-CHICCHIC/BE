@@ -88,6 +88,7 @@ public class ProductService {
             case "price" -> Sort.by(direction, "price");
             case "itemRating" -> Sort.by(direction, "itemRating");
             case "popularity", "sales" -> Sort.by(direction, "numSeller");
+            case "reviewCount", "reviews" -> Sort.by(direction, "reviewCount");     // 리뷰 많은 순 정렬
             default -> Sort.by(Sort.Direction.DESC, "numSeller");
         };
     }
@@ -97,6 +98,7 @@ public class ProductService {
             case "price" -> Integer.compare(p1.getPrice(), p2.getPrice());
             case "itemRating" -> Double.compare(p1.getItemRating(), p2.getItemRating());
             case "numSeller" -> Integer.compare(p1.getNumSeller(), p2.getNumSeller());
+            case "reviewCount", "reviews" -> Long.compare(p1.getReviewCount(), p2.getReviewCount());
             default -> 0;
         };
     }

@@ -2,10 +2,7 @@ package chic_chic.spring.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "products")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,9 +18,11 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long product_id;
+    @Column(name = "product_id")
+    private Long productId;
 
     private String name;         // 제품명
+    private String topNote;      // 탑 노트
     private String baseNote;     // 베이스 노트
     private String middleNote;   // 미들 노트
     private int price;           // 가격
@@ -40,6 +40,7 @@ public class Product {
     @Column(name = "num_seller")  //  DB 컬럼명을 직접 지정 (에러남)
     private int numSeller;
 
+    @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductNote> productNotes = new ArrayList<>();
 }

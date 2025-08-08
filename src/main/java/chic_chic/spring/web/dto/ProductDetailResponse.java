@@ -11,28 +11,32 @@ public record ProductDetailResponse(
         int price,
         int ml,
         String brand,
+        String topNote,
         String baseNote,
         String middleNote,
-        List<NoteDto> notes
+        double averageRating,
+        long reviewCount,
+        String usage,
+        String warnings
 ) {
     public static ProductDetailResponse from(Product product) {
         return new ProductDetailResponse(
-                product.getProduct_id(),
+                product.getProductId(),
                 product.getName(),
                 product.getConcentration(),
                 product.getPrice(),
                 product.getMl(),
                 product.getBrand(),
-                product.getBaseNote(),
+                product.getTopNote(),
                 product.getMiddleNote(),
-                product.getProductNotes().stream()
-                        .map(pn -> new NoteDto(
-                                pn.getNote().getNote_id(),
-                                pn.getNote().getNote()
-                        ))
-                        .toList()
+                product.getBaseNote(),
+                product.getAverageRating(),
+                product.getReviewCount(),
+                "사용 방법: 조금 떨어진 거리에서 원하는 부위에 분사해주세요.",
+                "주의사항: 눈에 들어가지 않도록 주의하고, 이상이 있을 경우 사용을 중단하세요."
         );
     }
 
     public record NoteDto(Long noteId, String name) {}
 }
+

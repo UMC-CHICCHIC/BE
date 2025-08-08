@@ -24,7 +24,7 @@ public class ProductListResponse {
 
     public static ProductListResponse from(Product product) {
         return ProductListResponse.builder()
-                .id(product.getProduct_id())
+                .id(product.getProductId())
                 .name(product.getName())
                 .brand(product.getBrand())
                 .ml(product.getMl())
