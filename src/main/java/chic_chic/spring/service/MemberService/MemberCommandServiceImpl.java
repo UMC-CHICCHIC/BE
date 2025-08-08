@@ -5,7 +5,9 @@ import chic_chic.spring.apiPayload.exception.handler.MemberHandler;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
 import chic_chic.spring.converter.MemberConverter;
 import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.RefreshToken;
 import chic_chic.spring.domain.repository.MemberRepository;
+import chic_chic.spring.domain.repository.RefreshTokenRepository;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,22 +24,21 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     @Override
     @Transactional
     public MemberResponseDTO.JoinResultDTO signup(MemberRequestDTO.JoinDto joinDto) {
         String encodedPassword = passwordEncoder.encode(joinDto.getPassword());
 
-        if (memberRepository.findByUsername(joinDto.getUsername()).isPresent()) {
-            throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
-        }
+
 
         if (memberRepository.findByEmail(joinDto.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
         Member member = Member.builder()
-                .username(joinDto.getUsername())
                 .email(joinDto.getEmail())
                 .password(encodedPassword)
                 .phoneNumber(joinDto.getPhoneNumber())
@@ -53,24 +54,31 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
+    @Transactional  // 저장이 일어나므로 트랜잭션 필요
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDto loginDto) {
-        Member member = memberRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다."));
+        Member member = memberRepository.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("아이디 또는 비밀번호가 잘못되었습니다.");
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
         // JWT 토큰 생성
-        String accessToken = jwtTokenProvider.createAccessToken(member.getUsername());
-        String refreshToken = jwtTokenProvider.createRefreshToken(member.getUsername());
+        String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
 
-        // 리프레시 토큰 저장 로직 필요 (DB 또는 캐시)
+        // 리프레시 토큰 엔티티 생성 및 저장
+        RefreshToken tokenEntity = RefreshToken.builder()
+                .email(member.getEmail())
+                .token(refreshToken)
+                .build();
+
+        refreshTokenRepository.save(tokenEntity);
 
         return MemberResponseDTO.LoginResultDTO.builder()
                 .memberId(member.getId())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)  // DTO에 리프레시 토큰 필드 추가 필요
+                .refreshToken(refreshToken)
                 .build();
     }
 
@@ -78,11 +86,10 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request){
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
-        String username = authentication.getName();
+        String email = authentication.getName();  // 이름 대신 email이 담긴다고 가정
 
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberConverter.toMemberInfo(member);
     }
-
 }

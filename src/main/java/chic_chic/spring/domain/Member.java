@@ -16,12 +16,8 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 아이디 (username)
-    @Column(nullable = false, unique = true, length = 30)
-    private String username;
-
     // 비밀번호
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
 
     // 이메일

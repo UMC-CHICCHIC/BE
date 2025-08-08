@@ -13,33 +13,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/auth")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberCommandService memberService;
-    private final MemberCommandService memberCommandService;
 
-    // 회원가입
-    @PostMapping("/signup")
+    @PostMapping("/api/v1/auth/signup")
+    @Operation(summary = "회원가입 API", description = "회원가입을 처리하는 API입니다.")
     public ResponseEntity<MemberResponseDTO.JoinResultDTO> signup(@RequestBody @Valid MemberRequestDTO.JoinDto joinDto) {
         MemberResponseDTO.JoinResultDTO result = memberService.signup(joinDto);
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/v1/auth/login")
+    @Operation(summary = "로그인 API", description = "사용자 로그인을 처리하는 API입니다.")
     public ResponseEntity<ApiResponse<MemberResponseDTO.LoginResultDTO>> login(@RequestBody MemberRequestDTO.LoginDto loginDto) {
         MemberResponseDTO.LoginResultDTO loginResult = memberService.login(loginDto);
         return ResponseEntity.ok(ApiResponse.onSuccess(loginResult));
     }
 
-    @GetMapping("/info")
-    @Operation(summary = "유저 내 정보 조회 API - 인증 필요",
+    @GetMapping("/member/info")
+    @Operation(
+            summary = "유저 내 정보 조회 API - 인증 필요",
             description = "유저가 내 정보를 조회하는 API입니다.",
             security = { @SecurityRequirement(name = "JWT") }
     )
     public ApiResponse<MemberResponseDTO.MemberInfoDTO> getMyInfo(HttpServletRequest request) {
-        return ApiResponse.onSuccess(memberCommandService.getMemberInfo(request));
+        return ApiResponse.onSuccess(memberService.getMemberInfo(request));
     }
-
 }

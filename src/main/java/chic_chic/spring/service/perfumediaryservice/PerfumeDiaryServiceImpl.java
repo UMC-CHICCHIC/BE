@@ -37,11 +37,14 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public PerfumeDiaryResponse createDiary(String token, PerfumeDiaryRequest request, MultipartFile image) {
-        Long memberId = jwtTokenProvider.getUserIdFromToken(token);
-        Member member = memberRepository.findById(memberId)
+        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
+        Member member = memberRepository.findByEmail(email)       // 변경
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        String imageUrl = null;
+        // 이하 생략
+
+
+    String imageUrl = null;
         if (image != null && !image.isEmpty()) {
             MultipartFile wrapped = wrapWithDirectory(image, "diaries");
             S3ResponseDto result = s3Uploader.upload(wrapped);
@@ -62,12 +65,17 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getMyPreview(String token) {
-        Long memberId = jwtTokenProvider.getUserIdFromToken(token);
+        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
+        Member member = memberRepository.findByEmail(email)       // 변경
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Long memberId = member.getId();
+
         Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<PerfumeDiary> diaries = diaryRepository.findByUser_IdOrderByCreatedAtDesc(memberId, pageable).getContent();
 
         return diaries.stream().map(this::toMyDiaryResponse).collect(Collectors.toList());
     }
+
 
     @Override
     public List<MyDiaryResponse> getPublicPreview() {   // 미리보기
@@ -92,7 +100,11 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getAllMy(String token, int page) {
-        Long memberId = jwtTokenProvider.getUserIdFromToken(token);
+        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
+        Member member = memberRepository.findByEmail(email)       // 변경
+                .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+        Long memberId = member.getId();
+
         Pageable pageable = PageRequest.of(page, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<PerfumeDiary> result = diaryRepository.findByUser_IdOrderByCreatedAtDesc(memberId, pageable);
 
@@ -100,6 +112,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
                 .map(this::toMyDiaryResponse)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public PerfumeDiaryDetailResponse getDiaryDetail(Long diaryId) {
@@ -129,21 +142,19 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public CommentResponse addComment(String token, Long diaryId, CommentRequest request) {
-        // (1) 사용자/다이어리 로드
-        Long memberId = jwtTokenProvider.getUserIdFromToken(token);
-        Member member = memberRepository.findById(memberId)
+        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
+        Member member = memberRepository.findByEmail(email)       // 변경
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
+
         PerfumeDiary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.DIARY_NOT_FOUND));
 
-        // (2) 부모 댓글 로드 (parentCommentId가 있을 때만)
         PerfumeDiaryComments parent = null;
         if (request.getParentCommentId() != null) {
             parent = commentRepository.findById(request.getParentCommentId())
                     .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
         }
 
-        // (3) 댓글 생성
         PerfumeDiaryComments comment = PerfumeDiaryComments.builder()
                 .diary(diary)
                 .user(member)
@@ -152,7 +163,6 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
                 .build();
         commentRepository.save(comment);
 
-        // (4) 응답 반환
         return new CommentResponse(
                 comment.getId(),
                 diary.getId(),
