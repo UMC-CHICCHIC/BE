@@ -2,22 +2,29 @@ package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 
+import chic_chic.spring.apiPayload.exception.GeneralException;
+import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.service.Review.ReviewService;
 import chic_chic.spring.web.dto.perfumeReview.ReviewRequest;
 import chic_chic.spring.web.dto.perfumeReview.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static chic_chic.spring.apiPayload.code.status.ErrorStatus.*;
 
 @RestController
 @RequestMapping("/perfumes/{perfumeId}/reviews")
 @RequiredArgsConstructor
 public class PerfumeReviewController {
     private final ReviewService reviewService;
+    private final MemberRepository memberRepository;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ReviewResponse>>> listReviews(
@@ -32,8 +39,11 @@ public class PerfumeReviewController {
     public ResponseEntity<ApiResponse<ReviewResponse>> createReview(
             @PathVariable Long perfumeId,
             @RequestBody @Valid ReviewRequest request,
-            @AuthenticationPrincipal Long memberId) {
-        ReviewResponse resp = reviewService.createReview(perfumeId, request, memberId);
+            Authentication authentication) {
+        String email = authentication.getName();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(MEMBER_NOT_FOUND));
+        ReviewResponse resp = reviewService.createReview(perfumeId, request, member.getId());
         return ResponseEntity.ok(ApiResponse.onSuccess(resp));
     }
 
@@ -42,17 +52,23 @@ public class PerfumeReviewController {
             @PathVariable Long perfumeId,
             @PathVariable Long reviewId,
             @RequestBody @Valid ReviewRequest request,
-            @AuthenticationPrincipal Long memberId) {
-        ReviewResponse resp = reviewService.updateReview(perfumeId, reviewId, request, memberId);
+            Authentication authentication) {
+        String email = authentication.getName();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(MEMBER_NOT_FOUND));
+        ReviewResponse resp = reviewService.updateReview(perfumeId, reviewId, request, member.getId());
         return ResponseEntity.ok(ApiResponse.onSuccess(resp));
     }
 
-    @DeleteMapping("/{reviewId}")   // 리뷰 삭제
+    @DeleteMapping("/{reviewId}")
     public ResponseEntity<ApiResponse<Void>> deleteReview(
             @PathVariable Long perfumeId,
             @PathVariable Long reviewId,
-            @AuthenticationPrincipal Long memberId) {
-        reviewService.deleteReview(perfumeId, reviewId, memberId);
+            Authentication authentication) {
+        String email = authentication.getName();
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new GeneralException(MEMBER_NOT_FOUND));
+        reviewService.deleteReview(perfumeId, reviewId, member.getId());
         return ResponseEntity.ok(ApiResponse.onSuccess(null));
     }
 }

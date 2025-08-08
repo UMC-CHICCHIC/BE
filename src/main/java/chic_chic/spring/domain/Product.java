@@ -30,10 +30,10 @@ public class Product {
     private int ml;               // 용량
     private double itemRating;   // 평점 (기준으로 사용) > DB 기준 평점
 
-   // @Column(name = "review_count")  // 리뷰 갯수
+    @Column(name = "review_count")  // 리뷰 갯수
     private Long reviewCount;
 
-   // @Column(name = "average_rating")
+    @Column(name = "average_rating")
     private Double averageRating;   // 리뷰 평균 평점
 
     private String brand;       // 브랜드
@@ -44,8 +44,7 @@ public class Product {
     @Column(name = "Image_url")
     private String ImageUrl;    // 제품이미지
 
-    @Column(name = "review_count", nullable = false)
-    private int reviewCount;   //임시 리뷰많은순
+
 
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

@@ -4,7 +4,7 @@ import chic_chic.spring.domain.Category;
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.domain.repository.CategoryRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
-import chic_chic.spring.web.dto.product.ProductListResponse;
+import chic_chic.spring.web.dto.ProductListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
