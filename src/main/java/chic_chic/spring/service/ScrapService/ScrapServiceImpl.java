@@ -6,7 +6,7 @@ import chic_chic.spring.domain.Scrap;
 import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
 import chic_chic.spring.domain.repository.ScrapRepository;
-import chic_chic.spring.web.dto.product.ProductListResponse;
+import chic_chic.spring.web.dto.ProductListResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

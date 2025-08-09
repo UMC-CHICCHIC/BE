@@ -5,7 +5,7 @@ import chic_chic.spring.config.jwt.JwtTokenProvider;
 import chic_chic.spring.domain.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
 import chic_chic.spring.service.ScrapService.ScrapService;
-import chic_chic.spring.web.dto.product.ProductListResponse;
+import chic_chic.spring.web.dto.ProductListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
