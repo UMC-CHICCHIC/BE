@@ -16,6 +16,7 @@ public class ProductListResponse {
     private String name;
     private String brand;
     private int ml;
+    private String topNote;
     private String baseNote;
     private String middleNote;
     private String concentration;
@@ -24,10 +25,11 @@ public class ProductListResponse {
 
     public static ProductListResponse from(Product product) {
         return ProductListResponse.builder()
-                .id(product.getProduct_id())
+                .id(product.getProductId())
                 .name(product.getName())
                 .brand(product.getBrand())
                 .ml(product.getMl())
+                .topNote(product.getTopNote())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .concentration(product.getConcentration())

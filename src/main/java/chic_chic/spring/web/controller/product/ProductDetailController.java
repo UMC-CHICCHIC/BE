@@ -1,8 +1,8 @@
 package chic_chic.spring.web.controller.product;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.web.dto.product.ProductDetailResponse;
 import chic_chic.spring.service.product.ProductDetailService;
+import chic_chic.spring.web.dto.ProductDetailResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

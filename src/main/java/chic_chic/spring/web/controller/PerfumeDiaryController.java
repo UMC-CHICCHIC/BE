@@ -10,8 +10,12 @@ import chic_chic.spring.web.dto.MyDiaryResponse;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryDetailResponse;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryRequest;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,11 +29,19 @@ public class PerfumeDiaryController {
 
     private final PerfumeDiaryService perfumeDiaryService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(
+            summary = "향수 일기 작성",
+            description = "일기 정보는 JSON 문자열(request)로, 이미지(image)는 파일로 multipart/form-data 형식으로 전송합니다. 인증된 사용자만 작성 가능.",
+            security = @SecurityRequirement(name = "JWT") // SwaggerConfig에 정의한 이름과 맞춰야 함
+    )
     public ResponseEntity<ApiResponse<PerfumeDiaryResponse>> createDiary(
+            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
+            @RequestHeader("Authorization") String bearerToken,
+            @Parameter(description = "일기 데이터 JSON 문자열 (title, content, isPublic)")
             @RequestPart("request") PerfumeDiaryRequest request,
-            @RequestPart(value = "image", required = false) MultipartFile image,
-            @RequestHeader("Authorization") String bearerToken
+            @Parameter(description = "첨부 이미지 (선택)")
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) {
         String token = extractToken(bearerToken);
         PerfumeDiaryResponse response = perfumeDiaryService.createDiary(token, request, image);
@@ -38,7 +50,13 @@ public class PerfumeDiaryController {
     }
 
     @GetMapping("/my")
+    @Operation(
+            summary = "내 일기 목록 조회",
+            description = "로그인한 사용자 본인의 일기 리스트를 조회합니다.",
+            security = @SecurityRequirement(name = "JWT")
+    )
     public ResponseEntity<ApiResponse<List<MyDiaryResponse>>> getMyDiaries(
+            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
             @RequestHeader("Authorization") String bearerToken
     ) {
         String token = extractToken(bearerToken);
@@ -47,32 +65,49 @@ public class PerfumeDiaryController {
     }
 
     @GetMapping("/public")
+    @Operation(
+            summary = "공개 일기 목록 조회",
+            description = "공개로 설정된 향수 일기만 조회됩니다."
+    )
     public ResponseEntity<ApiResponse<List<MyDiaryResponse>>> getPublicDiaries() {
         List<MyDiaryResponse> responses = perfumeDiaryService.getAllPublic(0);
         return ResponseEntity.ok(ApiResponse.onSuccess(responses));
     }
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "일기 상세 조회",
+            description = "공개 일기면 누구나, 비공개면 작성자만 볼 수 있도록 service 레이어에서 검사됩니다."
+    )
     public ResponseEntity<ApiResponse<PerfumeDiaryDetailResponse>> getDiaryDetail(
-            @PathVariable Long id
+            @Parameter(description = "일기 ID", required = true) @PathVariable Long id
     ) {
         PerfumeDiaryDetailResponse response = perfumeDiaryService.getDiaryDetail(id);
         return ResponseEntity.ok(ApiResponse.onSuccess(response));
     }
 
-    // 댓글 조회
     @GetMapping("/{id}/comments")
+    @Operation(
+            summary = "일기 댓글 조회",
+            description = "특정 일기에 달린 댓글 리스트 조회"
+    )
     public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(
-            @PathVariable Long id
+            @Parameter(description = "일기 ID", required = true) @PathVariable Long id
     ) {
         List<CommentResponse> responses = perfumeDiaryService.getComments(id);
         return ResponseEntity.ok(ApiResponse.onSuccess(responses));
     }
 
     @PostMapping("/{id}/comments")
+    @Operation(
+            summary = "댓글 작성",
+            description = "해당 일기에 댓글을 작성합니다. 인증이 필요합니다.",
+            security = @SecurityRequirement(name = "JWT")
+    )
     public ResponseEntity<ApiResponse<CommentResponse>> addComment(
-            @PathVariable Long id,
-            @RequestBody CommentRequest request,
+            @Parameter(description = "일기 ID", required = true) @PathVariable Long id,
+            @Parameter(description = "댓글 내용", required = true) @RequestBody CommentRequest request,
+            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
             @RequestHeader("Authorization") String bearerToken
     ) {
         String token = extractToken(bearerToken);
@@ -80,6 +115,7 @@ public class PerfumeDiaryController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.onSuccess(response));
     }
+
     private String extractToken(String bearerToken) {
         if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
             throw new GeneralException(ErrorStatus.INVALID_TOKEN);
