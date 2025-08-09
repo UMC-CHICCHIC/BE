@@ -65,11 +65,9 @@ public class SecurityConfig {
                         ).permitAll()
 
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/consult-posts",
-                                "/consult-posts/**"
-                        ).permitAll()
-                        .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/consult-posts", "/consult-posts/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/consult-posts/*/comments").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").authenticated()
                         .requestMatchers("/auth/**", "/login", "/signup").permitAll()
 
                         // 향수 일기장 관련: 공개 목록/상세는 허용

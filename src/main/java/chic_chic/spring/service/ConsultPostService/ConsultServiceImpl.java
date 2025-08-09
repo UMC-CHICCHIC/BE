@@ -26,6 +26,7 @@ public class ConsultServiceImpl implements ConsultService{
     private final MemberRepository memberRepository;
     private final ConsultPostRepository consultRepository;
 
+
     @Override
     public ConsultPostResponse.EntirePostDto creatPost(ConsultPostRequest request, MemberResponseDTO.MemberInfoDTO memberInfo){
         Member member = memberRepository.findByEmail(memberInfo.getEmail())
