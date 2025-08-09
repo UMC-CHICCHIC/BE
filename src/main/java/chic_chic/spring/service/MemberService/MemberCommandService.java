@@ -5,6 +5,7 @@ import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberCommandService {
     MemberResponseDTO.JoinResultDTO signup(MemberRequestDTO.JoinDto joinDto);
@@ -20,5 +21,10 @@ public interface MemberCommandService {
     void withdraw(HttpServletRequest request);
 
     void logout(HttpServletRequest request);
+
+    String getProfileImageUrl(String email);
+
+    String updateProfileImage(MultipartFile file, String email);
+
 
 }

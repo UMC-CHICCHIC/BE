@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class S3ResponseDto {
+public class    S3ResponseDto {
     private String url;
     private String key;
 }
