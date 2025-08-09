@@ -1,5 +1,6 @@
 package chic_chic.spring.web.dto;
 
+import chic_chic.spring.domain.Note;
 import chic_chic.spring.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProductResponse {
     private Long id;
     private String name;
+    private List<String> topNotes;
     private String baseNote;
     private String middleNote;
     private int price;
@@ -24,6 +26,9 @@ public class ProductResponse {
         return ProductResponse.builder()
                 .id(product.getProductId())
                 .name(product.getName())
+                .topNotes(product.getNotes().stream()
+                        .map(Note::getNote)
+                        .toList())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .price(product.getPrice())

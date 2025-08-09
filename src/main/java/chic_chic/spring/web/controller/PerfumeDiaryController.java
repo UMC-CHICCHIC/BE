@@ -10,8 +10,11 @@ import chic_chic.spring.web.dto.MyDiaryResponse;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryDetailResponse;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryRequest;
 import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,25 +31,28 @@ import java.util.List;
 public class PerfumeDiaryController {
 
     private final PerfumeDiaryService perfumeDiaryService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
-            summary = "향수 일기 작성",
-            description = "일기 정보는 JSON 문자열(request)로, 이미지(image)는 파일로 multipart/form-data 형식으로 전송합니다. 인증된 사용자만 작성 가능.",
-            security = @SecurityRequirement(name = "JWT") // SwaggerConfig에 정의한 이름과 맞춰야 함
+            summary = "향수 일기 작성 (multipart/form-data)",
+            description = "request: JSON 문자열, image: 파일. 예) request={\"title\":\"...\",\"content\":\"...\",\"isPublic\":true}",
+            security = @SecurityRequirement(name = "JWT")
     )
     public ResponseEntity<ApiResponse<PerfumeDiaryResponse>> createDiary(
             @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
             @RequestHeader("Authorization") String bearerToken,
-            @Parameter(description = "일기 데이터 JSON 문자열 (title, content, isPublic)")
-            @RequestPart("request") PerfumeDiaryRequest request,
+
+            @Parameter(description = "일기 데이터(JSON 문자열)")
+            @RequestPart("request") String requestJson,
+
             @Parameter(description = "첨부 이미지 (선택)")
             @RequestPart(value = "image", required = false) MultipartFile image
-    ) {
+    ) throws com.fasterxml.jackson.core.JsonProcessingException {
         String token = extractToken(bearerToken);
+        PerfumeDiaryRequest request = objectMapper.readValue(requestJson, PerfumeDiaryRequest.class);
         PerfumeDiaryResponse response = perfumeDiaryService.createDiary(token, request, image);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.onSuccess(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.onSuccess(response));
     }
 
     @GetMapping("/my")
@@ -65,20 +71,14 @@ public class PerfumeDiaryController {
     }
 
     @GetMapping("/public")
-    @Operation(
-            summary = "공개 일기 목록 조회",
-            description = "공개로 설정된 향수 일기만 조회됩니다."
-    )
+    @Operation(summary = "공개 일기 목록 조회", description = "공개로 설정된 향수 일기만 조회됩니다.")
     public ResponseEntity<ApiResponse<List<MyDiaryResponse>>> getPublicDiaries() {
         List<MyDiaryResponse> responses = perfumeDiaryService.getAllPublic(0);
         return ResponseEntity.ok(ApiResponse.onSuccess(responses));
     }
 
     @GetMapping("/{id}")
-    @Operation(
-            summary = "일기 상세 조회",
-            description = "공개 일기면 누구나, 비공개면 작성자만 볼 수 있도록 service 레이어에서 검사됩니다."
-    )
+    @Operation(summary = "일기 상세 조회", description = "공개 일기면 누구나, 비공개면 작성자만 볼 수 있도록 service 레이어에서 검사됩니다.")
     public ResponseEntity<ApiResponse<PerfumeDiaryDetailResponse>> getDiaryDetail(
             @Parameter(description = "일기 ID", required = true) @PathVariable Long id
     ) {
@@ -88,8 +88,8 @@ public class PerfumeDiaryController {
 
     @GetMapping("/{id}/comments")
     @Operation(
-            summary = "일기 댓글 조회",
-            description = "특정 일기에 달린 댓글 리스트 조회"
+            summary = "일기 댓글/대댓글 조회",
+            description = "최상위 댓글 목록을 내려주며, 각 항목의 replies 배열에 대댓글이 중첩되어 포함됩니다."
     )
     public ResponseEntity<ApiResponse<List<CommentResponse>>> getComments(
             @Parameter(description = "일기 ID", required = true) @PathVariable Long id
@@ -100,8 +100,8 @@ public class PerfumeDiaryController {
 
     @PostMapping("/{id}/comments")
     @Operation(
-            summary = "댓글 작성",
-            description = "해당 일기에 댓글을 작성합니다. 인증이 필요합니다.",
+            summary = "댓글/대댓글 작성",
+            description = "최상위 댓글이면 content만 보냅니다. 대댓글일 때만 parentCommentId를 포함합니다.",
             security = @SecurityRequirement(name = "JWT")
     )
     public ResponseEntity<ApiResponse<CommentResponse>> addComment(
@@ -112,8 +112,7 @@ public class PerfumeDiaryController {
     ) {
         String token = extractToken(bearerToken);
         CommentResponse response = perfumeDiaryService.addComment(token, id, request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.onSuccess(response));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.onSuccess(response));
     }
 
     private String extractToken(String bearerToken) {
