@@ -20,7 +20,7 @@ public class RecommendProductResponseDto {
 
     public static RecommendProductResponseDto from(Product p) {
         return RecommendProductResponseDto.builder()
-                .productId(p.getProduct_id())
+                .productId(p.getProductId())
                 .name(p.getName())
                 .baseNote(p.getBaseNote())
                 .middleNote(p.getMiddleNote())

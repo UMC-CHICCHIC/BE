@@ -22,7 +22,7 @@ public class ProductResponse {
 
     public static ProductResponse from(Product product) {
         return ProductResponse.builder()
-                .id(product.getProduct_id())
+                .id(product.getProductId())
                 .name(product.getName())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
