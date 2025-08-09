@@ -24,9 +24,10 @@ public class SwaggerConfig {
                         .description("ChicChic 프로젝트의 Swagger 문서입니다.")
                         .version("1.0.0"))
 
-                /*.servers(List.of(
-                        new Server().url("https://be-chicchicenvironments.up.railway.app") // HTTPS로
-                ))*/
+                .servers(List.of(
+                        new Server().url("http://localhost:8080").description("Local"),
+                        new Server().url("https://be-chicchicenvironments.up.railway.app").description("Prod")
+                ))
 
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()

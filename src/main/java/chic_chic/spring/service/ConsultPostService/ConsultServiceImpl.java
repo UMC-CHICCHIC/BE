@@ -29,7 +29,7 @@ public class ConsultServiceImpl implements ConsultService{
 
     @Override
     public ConsultPostResponse.EntirePostDto creatPost(ConsultPostRequest request, MemberResponseDTO.MemberInfoDTO memberInfo){
-        Member member = memberRepository.findByUsername(memberInfo.getUsername())
+        Member member = memberRepository.findByEmail(memberInfo.getEmail())
                 .orElseThrow(()-> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         ConsultPost entity = ConsultPostConverter.toEntity(request, member);
