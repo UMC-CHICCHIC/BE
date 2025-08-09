@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TestResultRepository extends JpaRepository<TestResult, Long> {
-    List<TestResult> findAllByMemberIdAndCreatedAt(Long memberId, LocalDateTime createdAt);
+    List<TestResult> findAllByMemberEmailAndCreatedAt(String memberEmail, LocalDateTime createdAt);
 }

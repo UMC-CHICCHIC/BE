@@ -12,20 +12,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "test_result")
 public class TestResult {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "test_id")
     private Long testId;
-    
-    private Integer perfumeId;
-    private Long memberId;
+
+    private  Long productId;
+
+    private String memberEmail;  // 이메일로 저장
+
     private String perfumeName;
+
     private String notes;
+
     private LocalDateTime createdAt;
 
-    public TestResult(Integer perfumeId, Long memberId, String perfumeName, String notes, LocalDateTime createdAt) {
-        this.perfumeId = perfumeId;
-        this.memberId = memberId;
+    public TestResult( Long productId, String memberEmail, String perfumeName, String notes, LocalDateTime createdAt) {
+        this.productId = productId;
+        this.memberEmail = memberEmail;
         this.perfumeName = perfumeName;
         this.notes = notes;
         this.createdAt = createdAt;
