@@ -16,6 +16,7 @@ public record ProductDetailResponse(
         String middleNote,
         double averageRating,
         long reviewCount,
+        List<NoteDto> notes,
         String usage,
         String warnings
 ) {
@@ -32,6 +33,12 @@ public record ProductDetailResponse(
                 product.getBaseNote(),
                 product.getAverageRating(),
                 product.getReviewCount(),
+                product.getProductNotes().stream()
+                        .map(pn -> new NoteDto(
+                                pn.getNote().getNote_id(),
+                                pn.getNote().getNote()
+                        ))
+                        .toList(),
                 "사용 방법: 조금 떨어진 거리에서 원하는 부위에 분사해주세요.",
                 "주의사항: 눈에 들어가지 않도록 주의하고, 이상이 있을 경우 사용을 중단하세요."
         );
