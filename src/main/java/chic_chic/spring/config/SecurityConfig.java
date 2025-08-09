@@ -56,7 +56,8 @@ public class SecurityConfig {
                                 "/diary",
                                 "/diary/**",
                                 "/perfume-stories",
-                                "/perfume-stories/**"
+                                "/perfume-stories/**",
+                                "/consult-posts/**"
                         ).permitAll() // Swagger 문서 열기 허용
 
                         .requestMatchers(HttpMethod.GET,
@@ -65,6 +66,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/images/**").permitAll()
 
                         .requestMatchers(
                                 "/auth/**", "/login", "/signup"
