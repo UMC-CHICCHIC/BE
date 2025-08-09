@@ -19,7 +19,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long note_id;
 
-    private String note;
+    private String note;    // 탑 노트
 
     @OneToMany(mappedBy = "note", cascade = CascadeType.ALL)
     private List<ProductNote> productNotes = new ArrayList<>();
