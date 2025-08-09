@@ -1,5 +1,6 @@
 package chic_chic.spring.web.dto;
 
+import chic_chic.spring.domain.Note;
 import chic_chic.spring.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +17,7 @@ public class ProductListResponse {
     private String name;
     private String brand;
     private int ml;
-    private String topNote;
+    private List<String> topNotes;
     private String baseNote;
     private String middleNote;
     private String concentration;
@@ -29,7 +30,9 @@ public class ProductListResponse {
                 .name(product.getName())
                 .brand(product.getBrand())
                 .ml(product.getMl())
-                .topNote(product.getTopNote())
+                .topNotes(product.getNotes().stream()
+                        .map(Note::getNote)
+                        .toList())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .concentration(product.getConcentration())

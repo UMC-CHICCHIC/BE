@@ -3,6 +3,7 @@ package chic_chic.spring.web.dto;
 import chic_chic.spring.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public record ProductDetailResponse(
         Long perfumeId,
@@ -11,36 +12,57 @@ public record ProductDetailResponse(
         int price,
         int ml,
         String brand,
-        String topNote,
-        String baseNote,
         String middleNote,
+        String baseNote,
         double averageRating,
         long reviewCount,
-        List<NoteDto> notes,
-        String usage,
-        String warnings
+        List<NoteDto> notes,        // 탑 노트
+        List<String> usage,
+        List<String> warnings
+
 ) {
+    private static final List<String> DEFAULT_USAGE = List.of(
+            "손목, 귀 뒤, 팔 안쪽 등 맥박이 느껴지는 부위에 1~2회 분사",
+            "피부에서 10~15cm 정도 떨어진 거리에서 분사",
+            "문지르지 말고 자연 건조",
+            "의류에 직접 분사 시 얼룩 가능성 주의"
+    );
+
+    private static final List<String> DEFAULT_WARNINGS = List.of(
+            "눈에 들어가지 않도록 주의",
+            "상처, 습진 등 이상이 있는 부위에는 사용 자제",
+            "사용 중 붉은 반점, 가려움 등 이상 증상 시 사용 중지 및 전문의 상담",
+            "직사광선 및 고온을 피하고 서늘한 곳에 보관",
+            "어린이의 손이 닿지 않는 곳에 보관",
+            "불꽃 주의, 인화성 물질 근처 사용 금지"
+    );
+
     public static ProductDetailResponse from(Product product) {
+        // review count 기본값을 0으로 지정 (null 방지)
+        double avg = Optional.ofNullable(product.getAverageRating()).orElse(0.0);
+        long reviews = Optional.ofNullable(product.getReviewCount()).orElse(0L);
+
+        // Note 리스트 반환
+        List<NoteDto> topNotes = product.getNotes().stream()
+                .map(n -> new NoteDto(n.getNote_id(), n.getNote()))
+                .toList();
+
         return new ProductDetailResponse(
+
+
                 product.getProductId(),
                 product.getName(),
                 product.getConcentration(),
                 product.getPrice(),
                 product.getMl(),
                 product.getBrand(),
-                product.getTopNote(),
                 product.getMiddleNote(),
                 product.getBaseNote(),
-                product.getAverageRating(),
-                product.getReviewCount(),
-                product.getProductNotes().stream()
-                        .map(pn -> new NoteDto(
-                                pn.getNote().getNote_id(),
-                                pn.getNote().getNote()
-                        ))
-                        .toList(),
-                "사용 방법: 조금 떨어진 거리에서 원하는 부위에 분사해주세요.",
-                "주의사항: 눈에 들어가지 않도록 주의하고, 이상이 있을 경우 사용을 중단하세요."
+                avg,
+                reviews,
+                topNotes,
+                DEFAULT_USAGE,
+                DEFAULT_WARNINGS
         );
     }
 
