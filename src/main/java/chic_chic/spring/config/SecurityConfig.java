@@ -56,8 +56,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/home/**",         // 메인페이지
-                                "/test",
+                                "/home//popular-products",         // 메인페이지
                                 "/test/questions",
                                 "/swagger-resources/**",
                                 "/categories",      // 카테고리 출력

@@ -1,4 +1,4 @@
-package chic_chic.spring.web.controller.home;
+package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.domain.Product;
@@ -7,8 +7,8 @@ import chic_chic.spring.web.dto.ProductResponse;
 import chic_chic.spring.web.dto.RecommendProductResponseDto;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,10 +31,11 @@ public class HomeController {
 
     @GetMapping("/recommend-products")
     public ApiResponse<List<RecommendProductResponseDto>> getRecommendProducts(
-            @AuthenticationPrincipal User user) {
+            @AuthenticationPrincipal UserDetails user) {
 
-        //String email = user.getUsername();
-        String email = "debug@example.com"; //디버그를위한 강제예시
+        // 인증이 안 된 경우 디버그 계정 사용
+        String email = (user != null) ? user.getUsername() : "debug@example.com";
+
         List<Product> products = homeProductService.getRecommendProducts(email);
 
         if (products.isEmpty()) {
