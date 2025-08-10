@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,16 +41,14 @@ public class PerfumeDiaryController {
             security = @SecurityRequirement(name = "JWT")
     )
     public ResponseEntity<ApiResponse<PerfumeDiaryResponse>> createDiary(
-            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
-            @RequestHeader("Authorization") String bearerToken,
-
-            @Parameter(description = "일기 데이터(JSON 문자열)")
+            @Parameter(description = "일기 데이터(JSON 문자열)",
+                    schema = @Schema(example = "{\"title\":\"테스트\",\"content\":\"컨텐츠\",\"isPublic\":true}"))
             @RequestPart("request") String requestJson,
-
             @Parameter(description = "첨부 이미지 (선택)")
-            @RequestPart(value = "image", required = false) MultipartFile image
-    ) throws com.fasterxml.jackson.core.JsonProcessingException {
-        String token = extractToken(bearerToken);
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @Parameter(hidden = true) HttpServletRequest httpRequest
+    ) throws JsonProcessingException {
+        String token = resolveToken(httpRequest);
         PerfumeDiaryRequest request = objectMapper.readValue(requestJson, PerfumeDiaryRequest.class);
         PerfumeDiaryResponse response = perfumeDiaryService.createDiary(token, request, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.onSuccess(response));
@@ -62,10 +61,9 @@ public class PerfumeDiaryController {
             security = @SecurityRequirement(name = "JWT")
     )
     public ResponseEntity<ApiResponse<List<MyDiaryResponse>>> getMyDiaries(
-            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
-            @RequestHeader("Authorization") String bearerToken
+            @Parameter(hidden = true) HttpServletRequest httpRequest
     ) {
-        String token = extractToken(bearerToken);
+        String token = resolveToken(httpRequest);
         List<MyDiaryResponse> responses = perfumeDiaryService.getAllMy(token, 0);
         return ResponseEntity.ok(ApiResponse.onSuccess(responses));
     }
@@ -107,18 +105,18 @@ public class PerfumeDiaryController {
     public ResponseEntity<ApiResponse<CommentResponse>> addComment(
             @Parameter(description = "일기 ID", required = true) @PathVariable Long id,
             @Parameter(description = "댓글 내용", required = true) @RequestBody CommentRequest request,
-            @Parameter(description = "JWT 토큰. 형식: Bearer {token}", required = true)
-            @RequestHeader("Authorization") String bearerToken
+            @Parameter(hidden = true) HttpServletRequest httpRequest
     ) {
-        String token = extractToken(bearerToken);
+        String token = resolveToken(httpRequest);
         CommentResponse response = perfumeDiaryService.addComment(token, id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.onSuccess(response));
     }
 
-    private String extractToken(String bearerToken) {
-        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+    private String resolveToken(HttpServletRequest request) {
+        String bearer = request.getHeader("Authorization");
+        if (bearer == null || !bearer.startsWith("Bearer ")) {
             throw new GeneralException(ErrorStatus.INVALID_TOKEN);
         }
-        return bearerToken.substring(7).trim();
+        return bearer.substring(7).trim();
     }
 }
