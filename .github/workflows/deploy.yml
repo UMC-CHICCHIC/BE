@@ -53,8 +53,9 @@ jobs:
           key: ${{ secrets.PEM_KEY }}
           script: |
             set -e
-            mkdir -p ~/app
-            cd ~/app
+            sudo mkdir -p /home/ubuntu/app
+            sudo chown -R ubuntu:ubuntu /home/ubuntu/app
+            cd /home/ubuntu/app
 
             # .env 생성 (GitHub Secrets 값 사용)
             cat > .env <<'EOF'
@@ -86,4 +87,4 @@ jobs:
 
             # 오래된 이미지 정리(선택)
             sudo docker image prune -af --filter "until=24h"
-            # 
+            
