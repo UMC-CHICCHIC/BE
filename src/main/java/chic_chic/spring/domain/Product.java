@@ -29,6 +29,9 @@ public class Product {
     private int ml;               // 용량
     private double itemRating;   // 평점 (기준으로 사용) > DB 기준 평점
 
+    @Column(columnDefinition = "TEXT")
+    private String ingredients;   // 전성분
+
     @Column(name = "review_count")  // 리뷰 갯수
     private Long reviewCount;
 

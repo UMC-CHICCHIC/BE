@@ -11,9 +11,10 @@ public record ProductDetailResponse(
         String concentration,
         int price,
         int ml,
-        String brand,
+        String brand,       // 제조업자
         String middleNote,
         String baseNote,
+        List<String> ingredients,   // 전성분
         double averageRating,
         long reviewCount,
         List<NoteDto> notes,        // 탑 노트
@@ -37,13 +38,18 @@ public record ProductDetailResponse(
             "불꽃 주의, 인화성 물질 근처 사용 금지"
     );
 
+    private static final List<String> DEFAULT_INGREDIENTS =
+            List.of("Alcohol Denat.", "Aqua/Water", "Parfum/Fragrance");
+
     public static ProductDetailResponse from(Product product) {
         // review count 기본값을 0으로 지정 (null 방지)
         double avg = Optional.ofNullable(product.getAverageRating()).orElse(0.0);
         long reviews = Optional.ofNullable(product.getReviewCount()).orElse(0L);
 
         // Note 리스트 반환
-        List<NoteDto> topNotes = product.getNotes().stream()
+        List<NoteDto> topNotes = Optional.ofNullable(product.getNotes())
+                .orElseGet(java.util.List::of)
+                .stream()
                 .map(n -> new NoteDto(n.getNote_id(), n.getNote()))
                 .toList();
 
@@ -55,15 +61,39 @@ public record ProductDetailResponse(
                 product.getConcentration(),
                 product.getPrice(),
                 product.getMl(),
-                product.getBrand(),
+                product.getBrand(),     // 제조업자
                 product.getMiddleNote(),
                 product.getBaseNote(),
+                buildIngredients(product, topNotes),
                 avg,
                 reviews,
-                topNotes,
+                topNotes,   // 탑노트
                 DEFAULT_USAGE,
                 DEFAULT_WARNINGS
         );
+    }
+
+    private static List<String> buildIngredients(Product product, List<NoteDto> topNotes) {
+        var merged = new java.util.LinkedHashSet<String>(); // 중복 제거 + 순서 유지
+
+        // 탑 노트 추가
+        for (NoteDto tn : topNotes) {
+            if (tn == null || tn.name() == null) continue;
+            String name = tn.name().trim();
+            if (!name.isEmpty()) merged.add(name);
+        }
+
+        for (String s : new String[]{product.getMiddleNote(), product.getBaseNote()}) {
+            if (s == null) continue;
+            for (String token : s.split(",")) {
+                String t = token.trim();
+                if (!t.isEmpty()) merged.add(t);
+            }
+        }
+
+        java.util.List<String> result = new java.util.ArrayList<>(DEFAULT_INGREDIENTS);
+        result.addAll(merged);  // 고정값 뒤에 노트 추가
+        return result;
     }
 
     public record NoteDto(Long noteId, String name) {}

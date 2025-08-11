@@ -25,6 +25,9 @@ public class PerfumeDiary extends BaseEntity {
 
     private String title;
     private String content;
+
+    @Builder.Default
+    @Column(nullable = false)
     private Boolean isPublic = true;
     private String imageUrl;
 }
