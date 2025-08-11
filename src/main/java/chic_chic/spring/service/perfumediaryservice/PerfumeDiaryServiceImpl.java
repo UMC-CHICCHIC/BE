@@ -37,11 +37,11 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public PerfumeDiaryResponse createDiary(String token, PerfumeDiaryRequest request, MultipartFile image) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 이하 생략
+
 
 
     String imageUrl = null;
@@ -65,8 +65,8 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getMyPreview(String token) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Long memberId = member.getId();
 
@@ -78,7 +78,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
 
     @Override
-    public List<MyDiaryResponse> getPublicPreview() {   // 미리보기
+    public List<MyDiaryResponse> getPublicPreview() {
         Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<PerfumeDiary> diaries = diaryRepository
                 .findByIsPublicTrueOrderByCreatedAtDesc(pageable)
@@ -100,8 +100,8 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getAllMy(String token, int page) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Long memberId = member.getId();
 
