@@ -22,7 +22,6 @@ public class Product {
     private Long productId;
 
     private String name;         // 제품명
-    private String topNote;      // 탑 노트
     private String baseNote;     // 베이스 노트
     private String middleNote;   // 미들 노트
     private int price;           // 가격

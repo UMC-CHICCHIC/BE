@@ -37,11 +37,11 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public PerfumeDiaryResponse createDiary(String token, PerfumeDiaryRequest request, MultipartFile image) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // 이하 생략
+
 
 
     String imageUrl = null;
@@ -65,8 +65,8 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getMyPreview(String token) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Long memberId = member.getId();
 
@@ -78,7 +78,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
 
     @Override
-    public List<MyDiaryResponse> getPublicPreview() {   // 미리보기
+    public List<MyDiaryResponse> getPublicPreview() {
         Pageable pageable = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<PerfumeDiary> diaries = diaryRepository
                 .findByIsPublicTrueOrderByCreatedAtDesc(pageable)
@@ -100,8 +100,8 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public List<MyDiaryResponse> getAllMy(String token, int page) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Long memberId = member.getId();
 
@@ -142,16 +142,21 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     @Override
     public CommentResponse addComment(String token, Long diaryId, CommentRequest request) {
-        String email = jwtTokenProvider.getEmailFromToken(token); // 변경
-        Member member = memberRepository.findByEmail(email)       // 변경
+        String email = jwtTokenProvider.getEmailFromToken(token);
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
 
         PerfumeDiary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.DIARY_NOT_FOUND));
 
+        // null 또는 <=0 이면 최상위로 간주
+        Long pid = request.getParentCommentId();
+        if (pid != null && pid <= 0) pid = null;
+
         PerfumeDiaryComments parent = null;
-        if (request.getParentCommentId() != null) {
-            parent = commentRepository.findById(request.getParentCommentId())
+        if (pid != null) {
+            // 같은 다이어리 검증
+            parent = commentRepository.findByIdAndDiaryId(pid, diaryId)
                     .orElseThrow(() -> new GeneralException(ErrorStatus.COMMENT_NOT_FOUND));
         }
 
@@ -161,43 +166,28 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
                 .content(request.getContent())
                 .parentComment(parent)
                 .build();
+
         commentRepository.save(comment);
 
-        return new CommentResponse(
-                comment.getId(),
-                diary.getId(),
-                comment.getContent(),
-                member.getNickname(),
-                comment.getCreatedAt(),
-                parent != null ? parent.getId() : null
-        );
+        return CommentResponse.fromEntity(comment);
+
     }
+
 
     @Override
     public List<CommentResponse> getComments(Long diaryId) {
-        // 1) 다이어리 존재 체크
         PerfumeDiary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.DIARY_NOT_FOUND));
 
-        // 2) 최상위 댓글만 조회 (parentComment == null), 생성일 오름차순
-        List<PerfumeDiaryComments> topComments =
-                commentRepository.findByDiaryAndParentCommentIsNullOrderByCreatedAt(diary);
-
-        // 3) DTO 변환 (자식 replies 필드도 함께 매핑)
-        return topComments.stream()
-                .map(this::toCommentResponse)
+        // 모든 댓글 조회(최상위 + 대댓글), 시간순
+        return commentRepository.findByDiaryOrderByCreatedAtAsc(diary)
+                .stream()
+                .map(CommentResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     private CommentResponse toCommentResponse(PerfumeDiaryComments c) {
-        return new CommentResponse(
-                c.getId(),
-                c.getDiary().getId(),
-                c.getContent(),
-                c.getUser().getNickname(),
-                c.getCreatedAt(),
-                c.getParentComment() != null ? c.getParentComment().getId() : null
-        );
+        return CommentResponse.fromEntity(c);
     }
 
     // 이미지 업로드용 MultipartFile에 디렉토리 이름 붙여주는 래퍼

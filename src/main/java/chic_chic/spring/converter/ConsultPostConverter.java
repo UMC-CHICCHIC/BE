@@ -5,10 +5,8 @@ import chic_chic.spring.domain.Member;
 import chic_chic.spring.web.dto.ConsultPostRequest;
 import chic_chic.spring.web.dto.ConsultPostResponse;
 import org.springframework.data.domain.Page;
-
-
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 public class ConsultPostConverter {
 
@@ -25,7 +23,7 @@ public class ConsultPostConverter {
 
     public static ConsultPostResponse.LatestDto toLatestDto(ConsultPost consultPost){
         return ConsultPostResponse.LatestDto.builder()
-                .consultId(consultPost.getConsultPostId())
+                .consultPostId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .content(consultPost.getContent())
@@ -58,7 +56,7 @@ public class ConsultPostConverter {
         return ConsultPostResponse.PreviewDto.builder()
                 .memberId(consultPost.getMember().getId())
                 .nickname(consultPost.getMember().getNickname())
-                .consultId(consultPost.getConsultPostId())
+                .consultPostId(consultPost.getConsultPostId())
                 .postType(consultPost.getPostType())
                 .title(consultPost.getTitle())
                 .imageUrl(consultPost.getImageUrl())

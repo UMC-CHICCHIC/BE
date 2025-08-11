@@ -17,7 +17,7 @@ public class ConsultPostResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class LatestDto{
-        private Long consultId;
+        private Long consultPostId;
         private PostType postType;
         private String title;
         private String content;
@@ -56,7 +56,7 @@ public class ConsultPostResponse {
     public static class PreviewDto {
         private Long memberId;
         private String nickname;
-        private Long consultId;
+        private Long consultPostId;
         private PostType postType;
         private String title;
         private String imageUrl;
