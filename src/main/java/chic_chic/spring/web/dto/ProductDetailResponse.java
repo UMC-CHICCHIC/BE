@@ -12,15 +12,17 @@ public record ProductDetailResponse(
         int price,
         int ml,
         String brand,
+        String brandUrl,
+        List<NoteDto> topNote,
         String middleNote,
         String baseNote,
         double averageRating,
         long reviewCount,
-        List<NoteDto> notes,        // 탑 노트
+        String ImageUrl,
         List<String> usage,
         List<String> warnings
-
-) {
+)
+{
     private static final List<String> DEFAULT_USAGE = List.of(
             "손목, 귀 뒤, 팔 안쪽 등 맥박이 느껴지는 부위에 1~2회 분사",
             "피부에서 10~15cm 정도 떨어진 거리에서 분사",
@@ -37,7 +39,7 @@ public record ProductDetailResponse(
             "불꽃 주의, 인화성 물질 근처 사용 금지"
     );
 
-    public static ProductDetailResponse from(Product product) {
+     public static ProductDetailResponse from(Product product, String brandUrl) {
         // review count 기본값을 0으로 지정 (null 방지)
         double avg = Optional.ofNullable(product.getAverageRating()).orElse(0.0);
         long reviews = Optional.ofNullable(product.getReviewCount()).orElse(0L);
@@ -56,11 +58,18 @@ public record ProductDetailResponse(
                 product.getPrice(),
                 product.getMl(),
                 product.getBrand(),
+                brandUrl,
+                product.getProductNotes().stream()
+                        .map(pn -> new NoteDto(
+                                pn.getNote().getNote_id(),
+                                pn.getNote().getNote()
+                        ))
+                        .toList(),
                 product.getMiddleNote(),
                 product.getBaseNote(),
                 avg,
                 reviews,
-                topNotes,
+                product.getImageUrl(),
                 DEFAULT_USAGE,
                 DEFAULT_WARNINGS
         );
