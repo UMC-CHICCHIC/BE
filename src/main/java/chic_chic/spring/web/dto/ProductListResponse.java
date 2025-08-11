@@ -16,12 +16,13 @@ public class ProductListResponse {
     private String name;
     private String brand;
     private int ml;
-    private String topNote;
+    List<ProductDetailResponse.NoteDto> topNote;
     private String baseNote;
     private String middleNote;
     private String concentration;
     private int price;
     private double itemRating;
+    private String imageUrl;
 
     public static ProductListResponse from(Product product) {
         return ProductListResponse.builder()
@@ -29,12 +30,19 @@ public class ProductListResponse {
                 .name(product.getName())
                 .brand(product.getBrand())
                 .ml(product.getMl())
-                .topNote(product.getTopNote())
+                . topNote(product.getProductNotes().stream()
+                        .map(pn -> new ProductDetailResponse.NoteDto(
+                                pn.getNote().getNote_id(),
+                                pn.getNote().getNote()
+                        ))
+                        .toList()
+                )
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .concentration(product.getConcentration())
                 .price(product.getPrice())
                 .itemRating(product.getItemRating())
+                .imageUrl(product.getImageUrl())
                 .build();
     }
 

@@ -45,7 +45,6 @@ public class Product {
     private String ImageUrl;    // 제품이미지
 
 
-
     @Builder.Default
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductNote> productNotes = new ArrayList<>();
@@ -56,5 +55,7 @@ public class Product {
                 .map(ProductNote::getNote)
                 .toList();
     }
+
+
 }
 

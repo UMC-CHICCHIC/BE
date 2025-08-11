@@ -15,21 +15,32 @@ import java.util.List;
 public class ProductResponse {
     private Long id;
     private String name;
+    List<ProductResponse.NoteDto> topNote;
     private String baseNote;
     private String middleNote;
     private int price;
     private double itemRating;
+    private String imageUrl;
 
     public static ProductResponse from(Product product) {
         return ProductResponse.builder()
                 .id(product.getProductId())
                 .name(product.getName())
+                .topNote(product.getProductNotes().stream()
+                        .map(pn -> new ProductResponse.NoteDto(
+                                pn.getNote().getNote_id(),
+                                pn.getNote().getNote()
+                        ))
+                        .toList())
                 .baseNote(product.getBaseNote())
                 .middleNote(product.getMiddleNote())
                 .price(product.getPrice())
                 .itemRating(product.getItemRating())
+                .imageUrl(product.getImageUrl())
                 .build();
     }
+
+    public record NoteDto(Long noteId, String name) {}
 
     public static List<ProductResponse> from(List<Product> products) {
         return products.stream()
