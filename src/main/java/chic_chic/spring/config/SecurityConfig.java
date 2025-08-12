@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
+                                "/actuator/health",
                                 "/home/popular-products",         // 메인페이지
                                 "/test/questions",
                                 "/swagger-resources/**",
