@@ -43,27 +43,17 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
-        Member member = Member.builder()
-                .email(joinDto.getEmail())
-                .password(encodedPassword)
-                .phoneNumber(joinDto.getPhoneNumber())
-                .nickname(joinDto.getNickname())
-                .profileImageUrl("https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png")
-                .build();
+        Member member = Member.builder().email(joinDto.getEmail()).password(encodedPassword).phoneNumber(joinDto.getPhoneNumber()).nickname(joinDto.getNickname()).profileImageUrl("https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png").build();
 
         Member savedMember = memberRepository.save(member);
 
-        return MemberResponseDTO.JoinResultDTO.builder()
-                .memberId(savedMember.getId())
-                .createdAt(savedMember.getCreatedAt())
-                .build();
+        return MemberResponseDTO.JoinResultDTO.builder().memberId(savedMember.getId()).createdAt(savedMember.getCreatedAt()).build();
     }
 
     @Override
     @Transactional  // 저장이 일어나므로 트랜잭션 필요
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDto loginDto) {
-        Member member = memberRepository.findByEmail(loginDto.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
+        Member member = memberRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다.");
@@ -74,18 +64,11 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
 
         // 리프레시 토큰 엔티티 생성 및 저장
-        RefreshToken tokenEntity = RefreshToken.builder()
-                .email(member.getEmail())
-                .token(refreshToken)
-                .build();
+        RefreshToken tokenEntity = RefreshToken.builder().email(member.getEmail()).token(refreshToken).build();
 
         refreshTokenRepository.save(tokenEntity);
 
-        return MemberResponseDTO.LoginResultDTO.builder()
-                .memberId(member.getId())
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return MemberResponseDTO.LoginResultDTO.builder().memberId(member.getId()).accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     @Transactional(readOnly = true)
@@ -94,8 +77,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
         String email = authentication.getName();  // 이름 대신 email이 담긴다고 가정
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberConverter.toMemberInfo(member);
     }
 
@@ -104,8 +86,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         String token = JwtTokenProvider.resolveToken(request);
         String email = jwtTokenProvider.getEmailFromToken(token);
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         if (member.getSocialType() != null) {
             // 소셜 로그인 회원: 닉네임, 휴대전화 수정 가능
@@ -130,10 +111,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
         memberRepository.save(member);
 
-        return MemberResponseDTO.UpdateResultDto.builder()
-                .nickname(member.getNickname())
-                .phoneNumber(member.getPhoneNumber())
-                .build();
+        return MemberResponseDTO.UpdateResultDto.builder().nickname(member.getNickname()).phoneNumber(member.getPhoneNumber()).build();
     }
 
     @Override
@@ -142,8 +120,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         String token = JwtTokenProvider.resolveToken(request);
         String email = jwtTokenProvider.getEmailFromToken(token);
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         memberRepository.delete(member);
     }
@@ -153,15 +130,13 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         String token = JwtTokenProvider.resolveToken(request);
         String email = jwtTokenProvider.getEmailFromToken(token);
 
-        RefreshToken refreshToken = refreshTokenRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        RefreshToken refreshToken = refreshTokenRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         refreshTokenRepository.delete(refreshToken);
     }
 
     public String getProfileImageUrl(String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         if (member.getProfileImageUrl() == null || member.getProfileImageUrl().isEmpty()) {
             return "https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png";
@@ -172,8 +147,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
 
     @Transactional
     public String updateProfileImage(MultipartFile file, String email) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         // S3에 새 이미지 업로드
         S3ResponseDto uploadResult = s3UploaderService.upload(file);
@@ -185,5 +159,21 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         return uploadResult.getUrl();
     }
 
+    public String deleteProfileImage(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        String currentImageUrl = member.getProfileImageUrl();
+
+        String defaultImageUrl = "https://aws-chicchic-bucket.s3.ap-northeast-2.amazonaws.com/default-profile.png";
+        if (currentImageUrl != null && !currentImageUrl.equals(defaultImageUrl)) {
+            String fileName = s3UploaderService.extractFileNameFromUrl(currentImageUrl);
+            s3UploaderService.delete(fileName);
+        }
+
+        member.setProfileImageUrl(defaultImageUrl);
+        memberRepository.save(member);
+
+        return defaultImageUrl;
+    }
 
 }

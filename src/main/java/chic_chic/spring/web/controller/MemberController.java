@@ -105,5 +105,15 @@ public class MemberController {
         return ApiResponse.onSuccess(updatedUrl);
     }
 
+    @DeleteMapping("/member/profile-image")
+    @Operation(summary = "프로필 이미지 삭제", security = {@SecurityRequirement(name = "JWT")})
+    public ApiResponse<String> deleteProfileImage(HttpServletRequest request) {
+        Authentication auth = jwtTokenProvider.extractAuthentication(request);
+        String email = auth.getName();
+
+        String defaultImageUrl = memberService.deleteProfileImage(email);
+        return ApiResponse.onSuccess(defaultImageUrl);
+    }
+
 
 }
