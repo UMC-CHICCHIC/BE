@@ -25,8 +25,9 @@ public class SwaggerConfig {
                         .version("1.0.0"))
 
                 .servers(List.of(
+                        new Server().url("https://chicchic-perfume.com").description("Prod"),
                         new Server().url("http://localhost:8080").description("Local"),
-                        new Server().url("https://be-chicchicenvironments.up.railway.app").description("Prod")
+                        new Server().url("https://be-chicchicenvironments.up.railway.app").description("Railway")
                 ))
 
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
