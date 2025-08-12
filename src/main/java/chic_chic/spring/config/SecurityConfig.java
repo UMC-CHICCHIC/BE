@@ -61,8 +61,10 @@ public class SecurityConfig {
                                 "/test/questions",
                                 "/swagger-resources/**",
                                 "/categories",      // 카테고리 출력
-                                "/products/**"      // 제품 관련 출력
+                                "/products/**",      // 제품 관련 출력
+                                "/member/reissue"
                         ).permitAll()
+
 
 
                         .requestMatchers(HttpMethod.GET, "/consult-posts", "/consult-posts/**").permitAll()
