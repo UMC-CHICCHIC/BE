@@ -12,16 +12,18 @@ public record ProductDetailResponse(
         int price,
         int ml,
         String brand,       // 제조업자
+        String brandUrl,
+        List<NoteDto> topNote,
         String middleNote,
         String baseNote,
         List<String> ingredients,   // 전성분
         double averageRating,
         long reviewCount,
-        List<NoteDto> notes,        // 탑 노트
+        String ImageUrl,
         List<String> usage,
         List<String> warnings
-
-) {
+)
+{
     private static final List<String> DEFAULT_USAGE = List.of(
             "손목, 귀 뒤, 팔 안쪽 등 맥박이 느껴지는 부위에 1~2회 분사",
             "피부에서 10~15cm 정도 떨어진 거리에서 분사",
@@ -41,17 +43,21 @@ public record ProductDetailResponse(
     private static final List<String> DEFAULT_INGREDIENTS =
             List.of("Alcohol Denat.", "Aqua/Water", "Parfum/Fragrance");
 
-    public static ProductDetailResponse from(Product product) {
+     public static ProductDetailResponse from(Product product, String brandUrl) {
         // review count 기본값을 0으로 지정 (null 방지)
         double avg = Optional.ofNullable(product.getAverageRating()).orElse(0.0);
         long reviews = Optional.ofNullable(product.getReviewCount()).orElse(0L);
 
         // Note 리스트 반환
-        List<NoteDto> topNotes = Optional.ofNullable(product.getNotes())
-                .orElseGet(java.util.List::of)
-                .stream()
-                .map(n -> new NoteDto(n.getNote_id(), n.getNote()))
-                .toList();
+         List<NoteDto> topNotes = Optional.ofNullable(product.getProductNotes())
+                 .orElseGet(List::of)
+                 .stream()
+                 .map(pn -> new NoteDto(
+                         pn.getNote().getNote_id(),     // Note id
+                         pn.getNote().getNote()         // Top Note
+                 ))
+                 .distinct()
+                 .toList();
 
         return new ProductDetailResponse(
 
@@ -62,12 +68,14 @@ public record ProductDetailResponse(
                 product.getPrice(),
                 product.getMl(),
                 product.getBrand(),     // 제조업자
+                brandUrl,
+                topNotes,   // 탑노트 + Note Id
                 product.getMiddleNote(),
                 product.getBaseNote(),
                 buildIngredients(product, topNotes),
                 avg,
                 reviews,
-                topNotes,   // 탑노트
+                product.getImageUrl(),
                 DEFAULT_USAGE,
                 DEFAULT_WARNINGS
         );
