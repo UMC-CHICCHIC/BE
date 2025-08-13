@@ -35,11 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (uri.startsWith("/api/v1/auth/login") ||
                 uri.startsWith("/api/v1/auth/register") ||
                 uri.startsWith("/api/v1/auth/reissue") ||
+                uri.startsWith("/member/reissue") ||
                 uri.startsWith("/oauth2") ||
                 uri.startsWith("/login")) {
             chain.doFilter(request, response);
             return;
         }
+
 
         String token = JwtTokenProvider.resolveToken(request);
 
