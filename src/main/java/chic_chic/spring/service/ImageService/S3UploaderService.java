@@ -9,4 +9,6 @@ public interface S3UploaderService {
 
     void delete(String key);
 
+    String extractFileNameFromUrl(String url);
+
 }

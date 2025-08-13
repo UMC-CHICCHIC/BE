@@ -26,5 +26,8 @@ public interface MemberCommandService {
 
     String updateProfileImage(MultipartFile file, String email);
 
+    String deleteProfileImage(String email);
+
+
 
 }

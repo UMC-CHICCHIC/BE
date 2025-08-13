@@ -100,4 +100,10 @@ public class S3UploaderServiceImpl implements S3UploaderService{
         }
         return ext;
     }
+
+    @Override
+    public String extractFileNameFromUrl(String url) {
+        return url.substring(url.lastIndexOf("/") + 1);
+    }
+
 }
