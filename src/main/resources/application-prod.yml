@@ -36,7 +36,7 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://chicchic-mu.vercel.app/oauth/callback"
             authorization-grant-type: authorization_code
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
@@ -45,7 +45,7 @@ spring:
               - profile_nickname
               - profile_image
               - account_email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://chicchic-mu.vercel.app/oauth/callback"
             authorization-grant-type: authorization_code
             client-name: Kakao
             provider: kakao
@@ -55,7 +55,7 @@ spring:
             scope:
               - name
               - email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://chicchic-mu.vercel.app/oauth/callback"
             authorization-grant-type: authorization_code
             client-name: Naver
             provider: naver
