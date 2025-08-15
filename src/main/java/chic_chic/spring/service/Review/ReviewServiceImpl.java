@@ -11,6 +11,9 @@ import chic_chic.spring.apiPayload.exception.GeneralException;
 
 import chic_chic.spring.web.dto.perfumeReview.ReviewRequest;
 import chic_chic.spring.web.dto.perfumeReview.ReviewResponse;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,13 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    // 첫 페이지만 캐시 (0-based)
+    @Cacheable(
+            cacheNames = "reviews",
+            key = "'p:' + #p0 + ':page:' + #p1 + ':size:' + #p2",
+            condition = "#p1 == 0"        // 첫 페이지(0)만
+    )
     public List<ReviewResponse> listReviews(Long perfumeId, int page, int size) {
         return reviewRepository.findByPerfumeId(
                         perfumeId,
@@ -54,7 +64,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewResponse createReview(Long perfumeId, ReviewRequest request, Long memberId) {
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product:detail", key = "#perfumeId"),
+            @CacheEvict(cacheNames = "reviews", allEntries = true) // 목록 캐시 무효화
+    })  public ReviewResponse createReview(Long perfumeId, ReviewRequest request, Long memberId) {
         Product product = productRepository.findById(perfumeId)
                 .orElseThrow(() -> new GeneralException(PERFUME_NOT_FOUND));
         Member member = memberRepository.findById(memberId)
@@ -85,6 +98,11 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product:detail", key = "#perfumeId"),
+            @CacheEvict(cacheNames = "reviews", allEntries = true) // 단순화: 모든 페이지 무효화
+            // 필요시 page 0만 지우려면 키 규칙에 맞춰 개별 키 evict 로 커스터마이즈
+    })
     public ReviewResponse updateReview(Long perfumeId, Long reviewId, ReviewRequest request, Long memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new GeneralException(REVIEW_NOT_FOUND));
@@ -113,6 +131,10 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "product:detail", key = "#perfumeId"),
+            @CacheEvict(cacheNames = "reviews", allEntries = true)
+    })
     public void deleteReview(Long perfumeId, Long reviewId, Long memberId) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new GeneralException(REVIEW_NOT_FOUND));
