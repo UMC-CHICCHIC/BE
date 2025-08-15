@@ -4,7 +4,7 @@ import chic_chic.spring.domain.entity.PerfumeStory;
 import lombok.Builder;
 import lombok.Getter;
 
-// 향수 이야기 (전체 조회)
+// 향수 이야기 (미리보기)
 @Builder
 @Getter
 public class PerfumeStoryResponse {
