@@ -1,6 +1,6 @@
 package chic_chic.spring.service.ScrapService;
 
-import chic_chic.spring.web.dto.ProductListResponse;
+import chic_chic.spring.web.dto.product.ProductListResponse;
 
 import java.util.List;
 

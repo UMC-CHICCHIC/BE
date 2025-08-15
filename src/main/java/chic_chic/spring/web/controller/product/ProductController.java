@@ -3,7 +3,7 @@ package chic_chic.spring.web.controller.product;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.service.product.ProductService;
-import chic_chic.spring.web.dto.ProductListResponse;
+import chic_chic.spring.web.dto.product.ProductListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

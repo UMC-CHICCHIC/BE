@@ -1,10 +1,10 @@
-package chic_chic.spring.web.controller;
+package chic_chic.spring.web.controller.home;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.service.product.HomeProductService;
-import chic_chic.spring.web.dto.ProductResponse;
-import chic_chic.spring.web.dto.RecommendProductResponseDto;
+import chic_chic.spring.web.dto.product.ProductResponse;
+import chic_chic.spring.web.dto.ai.RecommendProductResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +30,7 @@ public class HomeController {
     }
 
     @GetMapping("/recommend-products")
-    public ApiResponse<List<RecommendProductResponseDto>> getRecommendProducts(
+    public ApiResponse<List<RecommendProductResponse>> getRecommendProducts(
             @AuthenticationPrincipal UserDetails user) {
 
         // 인증이 안 된 경우 디버그 계정 사용
@@ -42,8 +42,8 @@ public class HomeController {
             return ApiResponse.onFailure("RECOMMEND404", "추천된 제품이 없습니다.", null);
         }
 
-        List<RecommendProductResponseDto> result = products.stream()
-                .map(RecommendProductResponseDto::from)
+        List<RecommendProductResponse> result = products.stream()
+                .map(RecommendProductResponse::from)
                 .toList();
 
         return ApiResponse.onSuccess(result);

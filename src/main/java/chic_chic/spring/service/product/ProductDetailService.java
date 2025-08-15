@@ -4,7 +4,7 @@ import chic_chic.spring.domain.Brand;
 import chic_chic.spring.domain.Product;
 import chic_chic.spring.domain.repository.BrandRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
-import chic_chic.spring.web.dto.ProductDetailResponse;
+import chic_chic.spring.web.dto.product.ProductDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;

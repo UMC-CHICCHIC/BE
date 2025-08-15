@@ -1,4 +1,4 @@
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.ai;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AIRequestDto {
+public class AiRequest {
     private String gender;
     private String concentration;
     private String scents;

@@ -1,6 +1,5 @@
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.product;
 
-import chic_chic.spring.domain.Note;
 import chic_chic.spring.domain.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

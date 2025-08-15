@@ -1,4 +1,4 @@
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.product;
 
 import chic_chic.spring.domain.Product;
 

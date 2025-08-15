@@ -1,4 +1,4 @@
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.ai;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnswerDto {
+public class TestAnswerRequest {
     private Integer questionId;
     private Integer optionId;
 }

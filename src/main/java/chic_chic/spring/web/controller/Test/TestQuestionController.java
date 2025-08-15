@@ -1,4 +1,4 @@
-package chic_chic.spring.web.controller;
+package chic_chic.spring.web.controller.Test;
 
 
 import chic_chic.spring.apiPayload.ApiResponse;

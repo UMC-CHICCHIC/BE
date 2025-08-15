@@ -4,9 +4,9 @@ import chic_chic.spring.client.AIRecommendClient;
 import chic_chic.spring.converter.TestResultConverter;
 import chic_chic.spring.domain.TestResult;
 import chic_chic.spring.domain.repository.TestResultRepository;
-import chic_chic.spring.web.dto.AnswerDto;
-import chic_chic.spring.web.dto.RecommendedPerfumeDto;
-import chic_chic.spring.web.dto.AIResponseDto;
+import chic_chic.spring.web.dto.ai.TestAnswerRequest;
+import chic_chic.spring.web.dto.ai.RecommendedProduct;
+import chic_chic.spring.web.dto.ai.AiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
@@ -26,8 +26,8 @@ public class TestSubmitService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public List<RecommendedPerfumeDto> recommendAndSave(List<AnswerDto> answers, String memberEmail) {
-        AIResponseDto aiResponse = aiRecommendClient.sendRecommendRequest(answers);
+    public List<RecommendedProduct> recommendAndSave(List<TestAnswerRequest> answers, String memberEmail) {
+        AiResponse aiResponse = aiRecommendClient.sendRecommendRequest(answers);
 
         List<TestResult> savedResults = aiResponse.getRecommendedPerfumes().stream()
                 .map(perfume -> {

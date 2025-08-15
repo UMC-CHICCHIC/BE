@@ -1,5 +1,5 @@
 
-package chic_chic.spring.web.dto;
+package chic_chic.spring.web.dto.ai;
 
 import chic_chic.spring.domain.Product;
 import lombok.AllArgsConstructor;
@@ -11,23 +11,23 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class RecommendProductResponseDto {
+public class RecommendProductResponse {
 
     private Long productId;
     private String name;
-    List<RecommendProductResponseDto.NoteDto> topNote;
+    List<RecommendProductResponse.NoteDto> topNote;
     private String baseNote;
     private String middleNote;
     private int price;
     private double itemRating;
     private String imageUrl;
 
-    public static RecommendProductResponseDto from(Product p) {
-        return RecommendProductResponseDto.builder()
+    public static RecommendProductResponse from(Product p) {
+        return RecommendProductResponse.builder()
                 .productId(p.getProductId())
                 .name(p.getName())
                 .topNote(p.getProductNotes().stream()
-                        .map(pn -> new RecommendProductResponseDto.NoteDto(
+                        .map(pn -> new RecommendProductResponse.NoteDto(
                                 pn.getNote().getNote_id(),
                                 pn.getNote().getNote()
                         ))

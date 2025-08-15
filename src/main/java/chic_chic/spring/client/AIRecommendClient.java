@@ -1,8 +1,8 @@
 package chic_chic.spring.client;
 
-import chic_chic.spring.web.dto.AIRequestDto;
-import chic_chic.spring.web.dto.AIResponseDto;
-import chic_chic.spring.web.dto.AnswerDto;
+import chic_chic.spring.web.dto.ai.AiRequest;
+import chic_chic.spring.web.dto.ai.AiResponse;
+import chic_chic.spring.web.dto.ai.TestAnswerRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,24 +15,24 @@ public class AIRecommendClient {
 
     private final RestTemplate restTemplate;
 
-    public AIResponseDto sendRecommendRequest(List<AnswerDto> answers) {
+    public AiResponse sendRecommendRequest(List<TestAnswerRequest> answers) {
 
-        // AnswerDto → AIRequestDto로 변환
-        AIRequestDto request = convertToAIRequest(answers);
+        // TestAnswerRequest → AIRequestDto로 변환
+        AiRequest request = convertToAIRequest(answers);
 
         return restTemplate.postForObject(
                 "http://43.201.229.88:8000/recommend_by_test",
                 request,
-                AIResponseDto.class
+                AiResponse.class
         );
     }
 
     // 내부 매핑 함수
-    private AIRequestDto convertToAIRequest(List<AnswerDto> answers) {
+    private AiRequest convertToAIRequest(List<TestAnswerRequest> answers) {
         String gender = null, concentration = null, scents = null, baseNote = null;
         List<String> middleNotes = new ArrayList<>();
 
-        for (AnswerDto answer : answers) {
+        for (TestAnswerRequest answer : answers) {
             switch (answer.getQuestionId()) {
                 case 1 -> gender = switch (answer.getOptionId()) {
                     case 101 -> "men"; case 102 -> "women"; case 103 -> "unisex"; case 104 -> "any"; default -> null;
@@ -61,7 +61,7 @@ public class AIRecommendClient {
         // null 값 제거
         middleNotes.removeIf(note -> note == null);
 
-        return new AIRequestDto(gender, concentration, scents, baseNote, middleNotes);
+        return new AiRequest(gender, concentration, scents, baseNote, middleNotes);
     }
 
 }

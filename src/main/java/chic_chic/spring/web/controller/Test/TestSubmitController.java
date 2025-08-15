@@ -1,8 +1,8 @@
-package chic_chic.spring.web.controller;
+package chic_chic.spring.web.controller.Test;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.service.TestSubmitService.TestSubmitService;
-import chic_chic.spring.web.dto.RecommendedPerfumeDto;
+import chic_chic.spring.web.dto.ai.RecommendedProduct;
 import chic_chic.spring.web.dto.TestSubmitRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class TestSubmitController {
     private final TestSubmitService testSubmitService;
 
     @PostMapping
-    public ApiResponse<List<RecommendedPerfumeDto>> submitTest(
+    public ApiResponse<List<RecommendedProduct>> submitTest(
             @RequestBody TestSubmitRequest request,
             @AuthenticationPrincipal User user) {
 
