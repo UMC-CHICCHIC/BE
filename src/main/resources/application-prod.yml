@@ -45,7 +45,7 @@ spring:
               - profile_nickname
               - profile_image
               - account_email
-            redirect-uri: "https://chicchic-perfume.com/login/oauth2/code/kakao"
+            redirect-uri: "http://localhost:5173/oauth/callback"
             authorization-grant-type: authorization_code
             client-name: Kakao
             provider: kakao
