@@ -1,7 +1,7 @@
 package chic_chic.spring.service.product;
 
-import chic_chic.spring.domain.Brand;
-import chic_chic.spring.domain.Product;
+import chic_chic.spring.domain.entity.Brand;
+import chic_chic.spring.domain.entity.Product;
 import chic_chic.spring.domain.repository.BrandRepository;
 import chic_chic.spring.domain.repository.ProductRepository;
 import chic_chic.spring.web.dto.product.ProductDetailResponse;

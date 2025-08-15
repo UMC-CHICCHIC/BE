@@ -1,6 +1,6 @@
 package chic_chic.spring.web.dto.product;
 
-import chic_chic.spring.domain.Product;
+import chic_chic.spring.domain.entity.Product;
 
 import java.util.List;
 import java.util.Optional;

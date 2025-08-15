@@ -3,16 +3,15 @@ package chic_chic.spring.web.controller;
 import chic_chic.spring.apiPayload.ApiResponse;
 
 import chic_chic.spring.apiPayload.exception.GeneralException;
-import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
-import chic_chic.spring.service.Review.ReviewService;
-import chic_chic.spring.web.dto.perfumeReview.ReviewRequest;
-import chic_chic.spring.web.dto.perfumeReview.ReviewResponse;
+import chic_chic.spring.service.review.ReviewService;
+import chic_chic.spring.web.dto.perfumereview.ReviewRequest;
+import chic_chic.spring.web.dto.perfumereview.ReviewResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

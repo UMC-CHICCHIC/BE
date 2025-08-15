@@ -1,8 +1,8 @@
 package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.service.ConsultCommentService.CommentService;
-import chic_chic.spring.service.MemberService.MemberCommandService;
+import chic_chic.spring.service.consultcommentservice.CommentService;
+import chic_chic.spring.service.memberservice.MemberCommandService;
 import chic_chic.spring.web.dto.ConsultPostCommentsRequest;
 import chic_chic.spring.web.dto.ConsultPostCommentsResponse;
 import chic_chic.spring.web.dto.MemberResponseDTO;

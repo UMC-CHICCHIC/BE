@@ -4,7 +4,7 @@ import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
 import chic_chic.spring.web.dto.MemberRequestDTO;
 import chic_chic.spring.web.dto.MemberResponseDTO;
-import chic_chic.spring.service.MemberService.MemberCommandService;
+import chic_chic.spring.service.memberservice.MemberCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;

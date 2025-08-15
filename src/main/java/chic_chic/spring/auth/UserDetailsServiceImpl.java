@@ -1,6 +1,6 @@
 package chic_chic.spring.auth;
 
-import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;

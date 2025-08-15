@@ -1,7 +1,7 @@
 package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.service.AuthService.AuthService;
+import chic_chic.spring.service.authservice.AuthService;
 import chic_chic.spring.web.dto.ReIssueRequestDTO;
 import chic_chic.spring.web.dto.ReIssueResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;

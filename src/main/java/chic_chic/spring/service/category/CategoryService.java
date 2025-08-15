@@ -1,7 +1,7 @@
 package chic_chic.spring.service.category;
 
 
-import chic_chic.spring.domain.Category;
+import chic_chic.spring.domain.entity.Category;
 import chic_chic.spring.domain.enums.CategoryType;
 import chic_chic.spring.domain.repository.CategoryRepository;
 import chic_chic.spring.web.dto.category.CategoryResponse;

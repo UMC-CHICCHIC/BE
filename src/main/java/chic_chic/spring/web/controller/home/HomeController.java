@@ -1,7 +1,7 @@
 package chic_chic.spring.web.controller.home;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.domain.Product;
+import chic_chic.spring.domain.entity.Product;
 import chic_chic.spring.service.product.HomeProductService;
 import chic_chic.spring.web.dto.product.ProductResponse;
 import chic_chic.spring.web.dto.ai.RecommendProductResponse;

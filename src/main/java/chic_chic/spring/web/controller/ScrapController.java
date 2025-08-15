@@ -2,9 +2,9 @@ package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
-import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.domain.repository.MemberRepository;
-import chic_chic.spring.service.ScrapService.ScrapService;
+import chic_chic.spring.service.scrapservice.ScrapService;
 import chic_chic.spring.web.dto.product.ProductListResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

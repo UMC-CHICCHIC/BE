@@ -1,7 +1,7 @@
 package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.service.ImageService.S3UploaderService;
+import chic_chic.spring.service.imageservice.S3UploaderService;
 import chic_chic.spring.web.dto.S3ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -1,9 +1,9 @@
 package chic_chic.spring.service.perfumediaryservice;
 
 import chic_chic.spring.web.dto.*;
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryDetailResponse;
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryRequest;
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryResponse;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryDetailResponse;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryRequest;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

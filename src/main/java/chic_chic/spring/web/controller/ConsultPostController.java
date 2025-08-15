@@ -2,8 +2,8 @@ package chic_chic.spring.web.controller;
 
 import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.domain.enums.PostType;
-import chic_chic.spring.service.ConsultPostService.ConsultService;
-import chic_chic.spring.service.MemberService.MemberCommandService;
+import chic_chic.spring.service.consultpostservice.ConsultService;
+import chic_chic.spring.service.memberservice.MemberCommandService;
 import chic_chic.spring.web.dto.ConsultPostRequest;
 import chic_chic.spring.web.dto.ConsultPostResponse;
 import chic_chic.spring.web.dto.MemberResponseDTO;

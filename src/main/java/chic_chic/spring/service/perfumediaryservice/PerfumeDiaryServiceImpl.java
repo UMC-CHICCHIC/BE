@@ -3,7 +3,7 @@ package chic_chic.spring.service.perfumediaryservice;
 import chic_chic.spring.apiPayload.code.status.ErrorStatus;
 import chic_chic.spring.apiPayload.exception.GeneralException;
 import chic_chic.spring.config.jwt.JwtTokenProvider;
-import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.domain.entity.PerfumeDiary;
 import chic_chic.spring.domain.entity.PerfumeDiaryComments;
 import chic_chic.spring.domain.repository.MemberRepository;
@@ -11,9 +11,9 @@ import chic_chic.spring.domain.repository.PerfumeDiaryCommentRepository;
 import chic_chic.spring.domain.repository.PerfumeDiaryRepository;
 import chic_chic.spring.web.dto.*;
 
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryDetailResponse;
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryRequest;
-import chic_chic.spring.web.dto.PerfumeDiary.PerfumeDiaryResponse;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryDetailResponse;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryRequest;
+import chic_chic.spring.web.dto.perfumediary.PerfumeDiaryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
 
     private final PerfumeDiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
-    private final chic_chic.spring.service.ImageService.S3UploaderService s3Uploader;
+    private final chic_chic.spring.service.imageservice.S3UploaderService s3Uploader;
     private final JwtTokenProvider jwtTokenProvider;
     private final PerfumeDiaryCommentRepository commentRepository;
 

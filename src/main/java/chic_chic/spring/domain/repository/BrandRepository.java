@@ -1,6 +1,6 @@
 package chic_chic.spring.domain.repository;
 
-import chic_chic.spring.domain.Brand;
+import chic_chic.spring.domain.entity.Brand;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

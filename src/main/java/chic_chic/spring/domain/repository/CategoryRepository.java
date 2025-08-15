@@ -1,6 +1,6 @@
 package chic_chic.spring.domain.repository;
 
-import chic_chic.spring.domain.Category;
+import chic_chic.spring.domain.entity.Category;
 import chic_chic.spring.domain.enums.CategoryType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

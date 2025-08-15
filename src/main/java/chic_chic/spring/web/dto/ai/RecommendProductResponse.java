@@ -1,7 +1,7 @@
 
 package chic_chic.spring.web.dto.ai;
 
-import chic_chic.spring.domain.Product;
+import chic_chic.spring.domain.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

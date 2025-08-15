@@ -1,7 +1,7 @@
 package chic_chic.spring.converter;
 
-import chic_chic.spring.domain.ConsultPost;
-import chic_chic.spring.domain.Member;
+import chic_chic.spring.domain.entity.ConsultPost;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.web.dto.ConsultPostRequest;
 import chic_chic.spring.web.dto.ConsultPostResponse;
 import org.springframework.data.domain.Page;

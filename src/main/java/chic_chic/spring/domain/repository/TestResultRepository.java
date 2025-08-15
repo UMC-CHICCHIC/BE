@@ -1,6 +1,6 @@
 package chic_chic.spring.domain.repository;
 
-import chic_chic.spring.domain.TestResult;
+import chic_chic.spring.domain.entity.TestResult;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;

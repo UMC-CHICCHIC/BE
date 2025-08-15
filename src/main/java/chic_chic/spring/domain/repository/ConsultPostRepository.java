@@ -1,6 +1,6 @@
 package chic_chic.spring.domain.repository;
 
-import chic_chic.spring.domain.ConsultPost;
+import chic_chic.spring.domain.entity.ConsultPost;
 import chic_chic.spring.domain.enums.PostType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

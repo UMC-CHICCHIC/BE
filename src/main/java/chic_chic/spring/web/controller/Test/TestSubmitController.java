@@ -1,9 +1,9 @@
 package chic_chic.spring.web.controller.Test;
 
 import chic_chic.spring.apiPayload.ApiResponse;
-import chic_chic.spring.service.TestSubmitService.TestSubmitService;
+import chic_chic.spring.service.testsubmitservice.TestSubmitService;
 import chic_chic.spring.web.dto.ai.RecommendedProduct;
-import chic_chic.spring.web.dto.TestSubmitRequest;
+import chic_chic.spring.web.dto.ai.TestSubmitRequest;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

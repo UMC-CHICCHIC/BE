@@ -1,7 +1,5 @@
 package chic_chic.spring.domain.entity;
 
-import chic_chic.spring.domain.Member;
-import chic_chic.spring.domain.common.BaseEntity;
 import jakarta.persistence.*;
 
 import lombok.*;

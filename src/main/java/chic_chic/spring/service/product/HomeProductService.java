@@ -1,6 +1,6 @@
 package chic_chic.spring.service.product;
 
-import chic_chic.spring.domain.Product;
+import chic_chic.spring.domain.entity.Product;
 import chic_chic.spring.domain.repository.ProductRepository;
 import chic_chic.spring.domain.repository.RecommendProductRepository;
 import lombok.RequiredArgsConstructor;

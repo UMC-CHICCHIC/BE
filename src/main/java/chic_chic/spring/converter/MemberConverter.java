@@ -1,10 +1,7 @@
 package chic_chic.spring.converter;
 
-import chic_chic.spring.domain.Member;
-import chic_chic.spring.web.dto.MemberRequestDTO;
+import chic_chic.spring.domain.entity.Member;
 import chic_chic.spring.web.dto.MemberResponseDTO;
-
-import java.time.LocalDateTime;
 
 public class MemberConverter {
 
