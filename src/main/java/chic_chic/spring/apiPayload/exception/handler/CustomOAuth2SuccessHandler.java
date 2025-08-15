@@ -32,7 +32,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
         ReIssueResponseDTO tokens = authService.login(email);
 
         response.setContentType("application/json;charset=UTF-8");
-        String json = String.format("{\"accesstoken\": \"%s\", \"refreshToken\": \"%s\"}", tokens.getAccessToken(), tokens.getRefreshToken());
+        String json = String.format("{\"accessToken\": \"%s\", \"refreshToken\": \"%s\"}", tokens.getAccessToken(), tokens.getRefreshToken());
         response.getWriter().write(json);
         response.getWriter().flush();
     }
