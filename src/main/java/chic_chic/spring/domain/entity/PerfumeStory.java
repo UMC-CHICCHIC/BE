@@ -2,9 +2,7 @@ package chic_chic.spring.domain.entity;
 
 import chic_chic.spring.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +10,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Perfume_Story")
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PerfumeStory extends BaseEntity {
 
 
