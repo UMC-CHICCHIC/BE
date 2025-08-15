@@ -55,7 +55,7 @@ spring:
             scope:
               - name
               - email
-            redirect-uri: "https://chicchic-mu.vercel.app/oauth/callback"
+            redirect-uri: "https://chicchic-perfume.com/login/oauth2/code/naver"
             authorization-grant-type: authorization_code
             client-name: Naver
             provider: naver
