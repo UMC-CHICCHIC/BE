@@ -15,15 +15,10 @@ public class AuthServiceImpl implements AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    // 로그인 시 토큰 생성 및 저장 메서드 추가
     public ReIssueResponseDTO login(String email) {
-        // (실제 로그인 인증 로직은 이 메서드 호출 전에 수행되어야 함)
-
-        // AccessToken, RefreshToken 생성
         String accessToken = jwtTokenProvider.createAccessToken(email);
         String refreshToken = jwtTokenProvider.createRefreshToken(email);
 
-        // RefreshToken 엔티티 저장
         RefreshToken tokenEntity = RefreshToken.builder()
                 .email(email)
                 .token(refreshToken)
@@ -31,7 +26,6 @@ public class AuthServiceImpl implements AuthService {
 
         refreshTokenRepository.save(tokenEntity);
 
-        // 토큰 반환
         return new ReIssueResponseDTO(accessToken, refreshToken);
     }
 

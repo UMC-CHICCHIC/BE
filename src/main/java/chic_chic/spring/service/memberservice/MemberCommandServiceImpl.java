@@ -49,7 +49,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     }
 
     @Override
-    @Transactional  // 저장이 일어나므로 트랜잭션 필요
+    @Transactional
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDto loginDto) {
         Member member = memberRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
 
@@ -57,11 +57,9 @@ public class MemberCommandServiceImpl implements MemberCommandService {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
-        // JWT 토큰 생성
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
 
-        // 리프레시 토큰 엔티티 생성 및 저장
         RefreshToken tokenEntity = RefreshToken.builder().email(member.getEmail()).token(refreshToken).build();
 
         refreshTokenRepository.save(tokenEntity);
@@ -73,7 +71,7 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request) {
         Authentication authentication = jwtTokenProvider.extractAuthentication(request);
-        String email = authentication.getName();  // 이름 대신 email이 담긴다고 가정
+        String email = authentication.getName();
 
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
         return MemberConverter.toMemberInfo(member);
@@ -87,16 +85,13 @@ public class MemberCommandServiceImpl implements MemberCommandService {
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         if (member.getSocialType() != null) {
-            // 소셜 로그인 회원: 닉네임, 휴대전화 수정 가능
             if (dto.getNickname() != null) {
                 member.updateNickname(dto.getNickname());
             }
             if (dto.getPhoneNumber() != null) {
                 member.updatePhoneNumber(dto.getPhoneNumber());
             }
-            // 이메일 수정 불가
         } else {
-            // 일반 회원: 닉네임, 휴대전화, 이메일 수정 가능
             if (dto.getNickname() != null) {
                 member.updateNickname(dto.getNickname());
             }
@@ -147,10 +142,8 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     public String updateProfileImage(MultipartFile file, String email) {
         Member member = memberRepository.findByEmail(email).orElseThrow(() -> new MemberHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        // S3에 새 이미지 업로드
         S3ResponseDto uploadResult = s3UploaderService.upload(file);
 
-        // DB에 새 이미지 URL 저장
         member.setProfileImageUrl(uploadResult.getUrl());
         memberRepository.save(member);
 
