@@ -4,6 +4,7 @@ import chic_chic.spring.apiPayload.ApiResponse;
 import chic_chic.spring.web.dto.PerfumeStoryDetailResponse;
 import chic_chic.spring.web.dto.PerfumeStoryResponse;
 import chic_chic.spring.service.perfumestoryservice.PerfumeStoryService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class PerfumeStoryController {
     private final PerfumeStoryService perfumeStoryService;
 
     // 목록 전체보기
+    @Operation(summary = "향수 이야기 목록 전체 조회", description = "향수 이야기의 목록을 전체 조회합니다.")
     @GetMapping
     public ApiResponse<List<PerfumeStoryResponse>> getAllStories() {
         List<PerfumeStoryResponse> result = perfumeStoryService.getAllStories();
@@ -24,6 +26,7 @@ public class PerfumeStoryController {
     }
 
     // 미리보기 카드
+    @Operation(summary = "향수 이야기 미리보기", description = "미리보기 화면에서 볼 수 있는 정보들입니다.")
     @GetMapping("/preview")
     public ApiResponse<List<PerfumeStoryResponse>> getPreviewStories(
             @RequestParam(defaultValue = "3") int size  // ?size=n 으로 개수 조절 가능
@@ -33,6 +36,7 @@ public class PerfumeStoryController {
     }
 
     // 글 상세보기 (전문 확인)
+    @Operation(summary = "향수 이야기 조회", description = "해당 향수 이야기의 본문을 조회합니다.")
     @GetMapping("/{id}")
     public ApiResponse<PerfumeStoryDetailResponse> getStoryDetail(@PathVariable Long id) {
         PerfumeStoryDetailResponse result = perfumeStoryService.getStoryDetail(id);
