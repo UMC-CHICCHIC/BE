@@ -22,19 +22,16 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-
         String email = extractEmailFromOAuth2User(oAuth2User);
-        if (email == null) {
-            throw new RuntimeException("이메일을 가져올 수 없습니다.");
-        }
+        if (email == null) throw new RuntimeException("이메일을 가져올 수 없습니다.");
 
-        // 로그인 처리(AccessToken + RefreshToken 생성 및 저장)
         ReIssueResponseDTO tokens = authService.login(email);
 
-        response.setContentType("application/json;charset=UTF-8");
-        String json = String.format("{\"accessToken\": \"%s\", \"refreshToken\": \"%s\"}", tokens.getAccessToken(), tokens.getRefreshToken());
-        response.getWriter().write(json);
-        response.getWriter().flush();
+        String redirectUrl = "http://localhost:5173/oauth/callback"
+                + "?accessToken=" + tokens.getAccessToken()
+                + "&refreshToken=" + tokens.getRefreshToken();
+
+        response.sendRedirect(redirectUrl);
     }
 
     private String extractEmailFromOAuth2User(OAuth2User oAuth2User) {
