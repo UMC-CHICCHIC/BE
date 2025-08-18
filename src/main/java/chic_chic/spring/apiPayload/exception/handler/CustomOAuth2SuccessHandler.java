@@ -27,7 +27,7 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
 
         ReIssueResponseDTO tokens = authService.login(email);
 
-        String redirectUrl = "http://localhost:5173/oauth/callback"
+        String redirectUrl =     " https://chicchic-mu.vercel.app/oauth/callback"
                 + "?accessToken=" + tokens.getAccessToken()
                 + "&refreshToken=" + tokens.getRefreshToken();
 
