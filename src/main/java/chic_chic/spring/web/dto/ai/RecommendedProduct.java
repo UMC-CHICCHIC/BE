@@ -13,4 +13,5 @@ public class RecommendedProduct {
     private Long productId;
     private String perfumeName;
     private List<String> recommendedNotes;
+    private String imageUrl;
 }

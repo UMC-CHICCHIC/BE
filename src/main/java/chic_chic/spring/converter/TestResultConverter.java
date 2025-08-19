@@ -11,7 +11,8 @@ public class TestResultConverter {
         return new RecommendedProduct(
                 aiPerfume.getProductId(),
                 aiPerfume.getPerfumeName(),
-                aiPerfume.getRecommendedNotes()
+                aiPerfume.getRecommendedNotes(),
+                aiPerfume.getImageUrl()
         );
     }
 }
