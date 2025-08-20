@@ -6,6 +6,7 @@ import chic_chic.spring.domain.repository.RecommendProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,13 +23,19 @@ public class HomeProductService {
 
     // 개인 맞춤 추천 향수 4개 조회 (메인 페이지용)
     public List<Product> getRecommendProducts(String memberEmail) {
-        List<Long> perfumeIds = recommendProductRepository
-                .findTop4ByMemberEmailOrderByCreatedAtDesc(memberEmail).stream()
-                .map(r -> r.getProductId())
-                .distinct()
-                .limit(4)
-                .toList();
 
-        return productRepository.findAllById(perfumeIds);
+        var results = recommendProductRepository
+                .findTop4ByMemberEmailOrderByCreatedAtDesc(memberEmail);
+
+        List<Product> recommendProducts = new ArrayList<>();
+
+
+        for (var r : results) {
+            productRepository.findById(r.getProductId()).ifPresent(recommendProducts::add);
+        }
+
+
+
+        return recommendProducts;
     }
 }
