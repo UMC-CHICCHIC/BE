@@ -1,5 +1,6 @@
 package chic_chic.spring.config;
 
+import chic_chic.spring.apiPayload.exception.handler.CustomOAuth2FailureHandler;
 import chic_chic.spring.apiPayload.exception.handler.CustomOAuth2SuccessHandler;
 import chic_chic.spring.auth.CustomAccessDeniedHandler;
 import chic_chic.spring.auth.CustomAuthenticationEntryPoint;
@@ -38,7 +39,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2FailureHandler customOAuth2FailureHandler) throws Exception {
         http
                 .cors(withDefaults())
                 .csrf(csrf -> csrf.disable())
@@ -101,6 +102,8 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(customOAuth2SuccessHandler)
+                        .failureHandler(customOAuth2FailureHandler)
+
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
