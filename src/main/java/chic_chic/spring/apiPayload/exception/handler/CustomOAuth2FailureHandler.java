@@ -18,10 +18,7 @@ public class CustomOAuth2FailureHandler implements AuthenticationFailureHandler 
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
 
-        String errorRedirect = "https://chicchic-mu.vercel.app/login/error"
-                + "?error=LOGIN_FAILED"
-                + "&message=" + URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
-
+        String errorRedirect = "https://chicchic-mu.vercel.app/login/error";
         response.sendRedirect(errorRedirect);
     }
 }
