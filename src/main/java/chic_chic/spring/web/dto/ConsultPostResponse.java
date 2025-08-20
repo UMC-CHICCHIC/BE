@@ -41,6 +41,7 @@ public class ConsultPostResponse {
     public static class EntirePostDto{
         private Long memberId;
         private String nickname;
+        private String profile;
         private Long consultPostId;
         private PostType postType;
         private String title;
@@ -56,6 +57,7 @@ public class ConsultPostResponse {
     public static class PreviewDto {
         private Long memberId;
         private String nickname;
+        private String profile;
         private Long consultPostId;
         private PostType postType;
         private String title;
