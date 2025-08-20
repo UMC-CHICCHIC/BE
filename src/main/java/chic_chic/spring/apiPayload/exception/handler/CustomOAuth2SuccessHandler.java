@@ -20,28 +20,23 @@ public class CustomOAuth2SuccessHandler implements AuthenticationSuccessHandler 
     private final AuthService authService;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = extractEmailFromOAuth2User(oAuth2User);
 
-        try {
-            if (email == null) throw new RuntimeException("이메일을 가져올 수 없습니다.");
-
-            ReIssueResponseDTO tokens = authService.login(email);
-
-            String redirectUrl = "https://chicchic-mu.vercel.app/oauth/callback"
-                    + "?accessToken=" + tokens.getAccessToken()
-                    + "&refreshToken=" + tokens.getRefreshToken();
-
-            response.sendRedirect(redirectUrl);
-
-        } catch (Exception e) {
-            String errorRedirect = "https://chicchic-mu.vercel.app/login/error"
-                    + "?error=LOGIN_FAILED"
-                    + "&message=" + java.net.URLEncoder.encode(e.getMessage(), java.nio.charset.StandardCharsets.UTF_8);
-
-            response.sendRedirect(errorRedirect);
+        if (email == null) {
+            throw new RuntimeException("이메일을 가져올 수 없습니다.");
         }
+
+        // 정상 로그인 처리
+        ReIssueResponseDTO tokens = authService.login(email);
+        String redirectUrl = "https://chicchic-mu.vercel.app/oauth/callback"
+                + "?accessToken=" + tokens.getAccessToken()
+                + "&refreshToken=" + tokens.getRefreshToken();
+
+        response.sendRedirect(redirectUrl);
     }
 
 

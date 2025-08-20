@@ -7,6 +7,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Component
@@ -16,9 +17,10 @@ public class CustomOAuth2FailureHandler implements AuthenticationFailureHandler 
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception) throws IOException {
+
         String errorRedirect = "https://chicchic-mu.vercel.app/login/error"
                 + "?error=LOGIN_FAILED"
-                + "&message=" + java.net.URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
+                + "&message=" + URLEncoder.encode(exception.getMessage(), StandardCharsets.UTF_8);
 
         response.sendRedirect(errorRedirect);
     }
