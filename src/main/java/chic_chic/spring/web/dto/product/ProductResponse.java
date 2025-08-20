@@ -15,6 +15,7 @@ import java.util.List;
 public class ProductResponse {
     private Long id;
     private String name;
+    private String brand;
     List<ProductResponse.NoteDto> topNote;
     private String baseNote;
     private String middleNote;
@@ -26,6 +27,7 @@ public class ProductResponse {
         return ProductResponse.builder()
                 .id(product.getProductId())
                 .name(product.getName())
+                .brand(product.getBrand())
                 .topNote(product.getProductNotes().stream()
                         .map(pn -> new ProductResponse.NoteDto(
                                 pn.getNote().getNote_id(),
