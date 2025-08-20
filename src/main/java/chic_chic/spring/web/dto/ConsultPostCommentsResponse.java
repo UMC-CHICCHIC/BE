@@ -28,6 +28,7 @@ public class ConsultPostCommentsResponse {
     public static class CommentListDto{
         private Long memberId;
         private String nickname;
+        private String profile;
         private String content;
         private Long hierarchy;
         private Long order;

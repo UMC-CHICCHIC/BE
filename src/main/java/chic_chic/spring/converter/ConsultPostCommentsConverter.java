@@ -56,6 +56,7 @@ public class ConsultPostCommentsConverter {
         return ConsultPostCommentsResponse.CommentListDto.builder()
                 .memberId(comments.getMember().getId())
                 .nickname(comments.getMember().getNickname())
+                .profile(comments.getMember().getProfileImageUrl())
                 .content(comments.getContent())
                 .hierarchy(comments.getHierarchy())
                 .order(comments.getOrders())
