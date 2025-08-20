@@ -14,7 +14,9 @@ import chic_chic.spring.web.dto.MemberResponseDTO;
 import chic_chic.spring.web.dto.S3ResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,20 +53,24 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     @Transactional
     public MemberResponseDTO.LoginResultDTO login(MemberRequestDTO.LoginDto loginDto) {
-        Member member = memberRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
+        Member member = memberRepository.findByEmail(loginDto.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("이메일 또는 비밀번호가 잘못되었습니다."));
 
         if (!passwordEncoder.matches(loginDto.getPassword(), member.getPassword())) {
-            throw new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다.");
+            throw new BadCredentialsException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(member.getEmail());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail());
 
         RefreshToken tokenEntity = RefreshToken.builder().email(member.getEmail()).token(refreshToken).build();
-
         refreshTokenRepository.save(tokenEntity);
 
-        return MemberResponseDTO.LoginResultDTO.builder().memberId(member.getId()).accessToken(accessToken).refreshToken(refreshToken).build();
+        return MemberResponseDTO.LoginResultDTO.builder()
+                .memberId(member.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     @Transactional(readOnly = true)
