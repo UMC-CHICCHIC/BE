@@ -36,6 +36,7 @@ public class SecurityConfig {
     private final CustomOAuth2MemberServiceImpl customOAuth2UserService;
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -65,7 +66,9 @@ public class SecurityConfig {
                                 "/member/reissue"
                         ).permitAll()
 
-
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/products/search"
+                        ).permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/consult-posts", "/consult-posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/consult-posts/*/comments").permitAll()
