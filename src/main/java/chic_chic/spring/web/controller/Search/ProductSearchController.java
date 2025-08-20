@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Product Search", description = "상품 이름 단일 검색 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/products")
+@RequestMapping("/products")
 public class ProductSearchController {
 
     private final ProductSearchService productSearchService;

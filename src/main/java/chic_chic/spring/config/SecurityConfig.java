@@ -67,10 +67,6 @@ public class SecurityConfig {
                                 "/member/reissue"
                         ).permitAll()
 
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/v1/products/search"
-                        ).permitAll()
-
                         .requestMatchers(HttpMethod.GET, "/consult-posts", "/consult-posts/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/consult-posts/*/comments").permitAll()
                         .requestMatchers(HttpMethod.POST, "/consult-posts", "/images/**").authenticated()
