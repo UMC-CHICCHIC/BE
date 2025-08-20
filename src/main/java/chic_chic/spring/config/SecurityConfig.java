@@ -89,8 +89,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/perfumes/*/reviews").permitAll()
 
                         // 리뷰 작성/수정/삭제 : 인증 필요
-                        .requestMatchers(HttpMethod.POST,   "/perfumes/*/reviews").authenticated()
-                        .requestMatchers(HttpMethod.PUT,    "/perfumes/*/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/perfumes/*/reviews").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/perfumes/*/reviews/*").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/perfumes/*/reviews/*").authenticated()
 
                         // 그 외는 인증 필요
@@ -101,7 +101,6 @@ public class SecurityConfig {
                                 .userService(customOAuth2UserService)
                         )
                         .successHandler(customOAuth2SuccessHandler)
-
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
