@@ -140,6 +140,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
         );
     }
 
+    // 댓글 추가하기
     @Override
     public CommentResponse addComment(String token, Long diaryId, CommentRequest request) {
         String email = jwtTokenProvider.getEmailFromToken(token);
@@ -174,6 +175,7 @@ public class PerfumeDiaryServiceImpl implements PerfumeDiaryService {
     }
 
 
+    // 댓글 불러오기
     @Override
     public List<CommentResponse> getComments(Long diaryId) {
         PerfumeDiary diary = diaryRepository.findById(diaryId)

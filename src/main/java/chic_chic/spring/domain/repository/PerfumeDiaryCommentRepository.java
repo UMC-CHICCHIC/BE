@@ -3,6 +3,8 @@ package chic_chic.spring.domain.repository;
 import chic_chic.spring.domain.entity.PerfumeDiary;
 import chic_chic.spring.domain.entity.PerfumeDiaryComments;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +20,14 @@ public interface PerfumeDiaryCommentRepository extends JpaRepository<PerfumeDiar
 
     // 부모 검증용: 해당 diary에 속한 특정 댓글
     Optional<PerfumeDiaryComments> findByIdAndDiaryId(Long id, Long diaryId);
+
+    // N+1문제 방지
+    @Query("""
+    select c from PerfumeDiaryComments c
+    join fetch c.user
+    left join fetch c.parentComment
+    where c.diary = :diary
+    order by c.createdAt asc
+    """)
+    List<PerfumeDiaryComments> findByDiaryWithUserOrderByCreatedAtAsc(@Param("diary") PerfumeDiary diary);
 }

@@ -22,6 +22,7 @@ public class CommentResponse {
     private String nickName;
     private LocalDateTime createdAt;
     private Long parentCommentId;
+    private String profileImageUrl;     // 프로필 이미지
     private List<CommentResponse> replies = new ArrayList<>();
 
     public static CommentResponse fromEntity(PerfumeDiaryComments c) {
@@ -34,6 +35,7 @@ public class CommentResponse {
         dto.setParentCommentId(
                 c.getParentComment() != null ? c.getParentComment().getId() : null
         );
+        dto.setProfileImageUrl(c.getUser().getProfileImageUrl());
         return dto;
     }
 }
